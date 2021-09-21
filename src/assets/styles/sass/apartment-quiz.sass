@@ -1,0 +1,19 @@
+@import ./variables
+
+.apartment-quiz
+    --trigger-transform-x: 0
+    --body-transform-x: calc( 100% + var(--offset-x) )
+    --offset-x: 25px
+
+    right: var(--offset-x)
+    top: 70vh
+    transform: translateY(-50%)
+    &__trigger, &__body
+        transition: transform .7s cubic-bezier(0.38,-1.18, 0.54, 2.02) 0s
+    &__trigger
+        transform: translateX(var(--trigger-transform-x))
+    &__body
+        transform: translateX(var(--body-transform-x))
+    &.active
+        --trigger-transform-x: calc( 100% + var(--offset-x) )
+        --body-transform-x: 0
