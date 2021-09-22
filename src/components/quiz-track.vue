@@ -6,7 +6,7 @@
     }"
   >
     <quiz-page
-      title="Какой тип квартиры вас интересует?"
+      :title="titles[0]"
       class="quiz-body__page"
       ref="quizPage"
       :class="{
@@ -23,7 +23,7 @@
     </quiz-page>
 
     <quiz-page
-      title="Стоимость кавртиры"
+      :title="titles[1]"
       class="quiz-body__page"
       :class="{
         active: currentPage === 1,
@@ -37,7 +37,7 @@
     </quiz-page>
 
     <quiz-page
-      title="Найдены квартиры по вашему запросу"
+      :title="titles[2]"
       class="quiz-body__page"
       :class="{
         active: currentPage === 2,
@@ -45,11 +45,13 @@
 
       title-class="mb-16"
     >
-
+      <form-page
+        :title="subtitles[0]"
+      />
     </quiz-page>
 
     <quiz-page
-      title="Стоимость кавртиры"
+      :title="titles[3]"
       class="quiz-body__page"
       :class="{
         active: currentPage === 3,
@@ -64,6 +66,7 @@
 
 <script>
 import quizPage from './quiz-page.vue';
+import formPage from './pages/form-page.vue';
 import apartmentTypePage from './pages/apartment-type-page.vue';
 import apartmentPricePage from './pages/apartment-price-page.vue';
 
@@ -85,6 +88,18 @@ export default {
         return {};
       }
     },
+    titles: {
+      type: Array,
+      default: function(){
+        return [];
+      }
+    },
+    subtitles: {
+      type: Array,
+      default: function(){
+        return [];
+      }
+    }
   },
   data(){
     return {
@@ -111,6 +126,7 @@ export default {
   },
   components: {
     quizPage,
+    formPage,
     apartmentTypePage,
     apartmentPricePage,
   }

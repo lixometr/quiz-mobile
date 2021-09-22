@@ -12,6 +12,7 @@
 
       :apartment-types="fetchedQuizData.apartmentTypes"
       :slider-data="fetchedQuizData.rangeSlider"
+      :text-data="fetchedQuizData.text"
 
       class="apartment-quiz__body z-10 absolute bottom-0"
     />
@@ -53,6 +54,19 @@ export default {
           maxValue: 3000,
           value: 1000,
         },
+        text: {
+          pageTitles: [
+            'Какой тип квартиры вас интересует?',
+            'Стоимость кавртиры',
+            'Найдены квартиры по вашему запросу',
+            'Спасибо!',
+          ],
+          subtitles: [
+            'Мы готовы рассказать о них! На какой номер вам позвонить?',
+            'Наш менеджер скоро свяжется с вами',
+          ],
+          agreementText: 'Нажимая на кнопку, вы даете согласие на обработку персональных данных и соглашаетесь c политикой конфиденциальности',
+        }
       },
       userData: {
         apartmentTypes: [],

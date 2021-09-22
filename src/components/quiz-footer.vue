@@ -16,7 +16,11 @@
       />
     </ul>
 
-    <div class="flex w-100">
+    <div
+      class="flex"
+
+      v-if="currentPage < 2"
+    >
       <button
         @click="setCurrentPage(currentPage - 1)"
 
@@ -32,6 +36,20 @@
         Далее
       </button>
     </div>
+
+    <template v-else-if="currentPage === 2">
+      <button
+        @click="setCurrentPage(currentPage + 1)"
+
+        class="quiz-footer__navigator quiz-footer__navigator_submit w-full rounded-md text-quiz-white text-center px-2 font-medium text-lg mb-3"
+      >
+        Отправить
+      </button>
+
+      <p class="pl-5 pb-3 text-xs text-quiz-white">
+        {{ agreementText }}
+      </p>
+    </template>
   </footer>
 </template>
 
@@ -43,6 +61,10 @@ export default {
     currentPage: {
       type: Number,
       default: 0,
+    },
+    agreementText: {
+      type: String,
+      default: '',
     },
     pages: {
       type: Array,

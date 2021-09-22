@@ -7,9 +7,12 @@
     ></button>
 
     <quiz-track
-      :current-page="currentPage"
       :slider-data="sliderData"
+      :current-page="currentPage"
+      :titles="textData.pageTitles"
+      :subtitles="textData.subtitles"
       :apartment-types="apartmentTypes"
+
       class="mb-4"
     />
 
@@ -17,8 +20,9 @@
     <quiz-footer
       @set-current-page="setCurrentPage($event)"
 
-      :current-page="currentPage"
       :pages="pagesArr"
+      :current-page="currentPage"
+      :agreement-text="textData.agreementText"
 
       v-if="currentPage !== pagesArr.length - 1 || true"
     />
@@ -38,6 +42,12 @@ export default {
       }
     },
     sliderData: {
+      type: Object,
+      default: function(){
+        return {};
+      }
+    },
+    textData: {
       type: Object,
       default: function(){
         return {};
