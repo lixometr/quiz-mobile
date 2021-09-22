@@ -1,0 +1,37 @@
+@import ./variables
+
+.range-slider
+    &__stop
+        height: 17px
+        width: 17px
+        background-color: var(--quiz-text-white)
+        &_active
+            background-color: var(--quiz-accent)
+    &__track
+        height: 4px
+        background-color: var(--quiz-text-white)
+        position: relative
+    &__progress
+        --decorative-margin: -1px
+        --prgress-scale-x: 00%
+
+        width: var(--prgress-scale-x)
+        height: 200%
+        position: absolute
+        top: 50%
+        left: 0
+        transform-origin: left
+        background-color: var(--quiz-accent)
+        transform: translate(var(--decorative-margin), -50%)
+    &__knob
+        cursor: pointer
+        display: block
+        position: absolute
+        right: 0
+        top: 50%
+        transform: translate(50%, -50%)
+        height: 30px
+        width: 30px
+        border-radius: 10px
+        background-color: var(--quiz-accent)
+        flex-shrink: 0

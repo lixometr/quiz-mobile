@@ -10,6 +10,9 @@
     <quiz-body
       @toggle-quiz="toggleQuiz"
 
+      :apartment-types="fetchedQuizData.apartmentTypes"
+      :slider-data="fetchedQuizData.rangeSlider"
+
       class="apartment-quiz__body z-10 absolute bottom-0"
     />
 
@@ -30,6 +33,32 @@ export default {
   data(){
     return {
       isQuizOpened: false,
+      fetchedQuizData: {
+        apartmentTypes: [
+          {
+            title: 'Студия',
+          },
+          {
+            title: '1-комнатная',
+          },
+          {
+            title: '2-комнатная',
+          },
+          {
+            title: '3-комнатная',
+          },
+        ],
+        rangeSlider: {
+          minValue: 0,
+          maxValue: 3000,
+          value: 1000,
+        },
+      },
+      userData: {
+        apartmentTypes: [],
+        price: 0,
+        phone: '',
+      },
     }
   },
   methods: {

@@ -1,0 +1,12 @@
+@import ./variables
+
+.quiz-checkbox
+    display: block
+    &__fake
+        width: 30px
+        height: 30px
+        background-color: var(--quiz-text-white)
+        background-repeat: no-repeat
+        background-position: center
+    &__input:checked + &__fake
+            background-image: url(../../img/checkbox-tip.svg)
