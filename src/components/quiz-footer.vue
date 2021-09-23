@@ -46,7 +46,7 @@
         Отправить
       </button>
 
-      <p class="pl-5 pb-3 text-xs text-quiz-white">
+      <p class="pl-5 pb-3 text-xs text-quiz-white leading-3 sm:leading-4">
         {{ agreementText }}
       </p>
     </template>

@@ -13,7 +13,7 @@
         active: currentPage === 0,
       }"
 
-      title-class="mb-16"
+      title-class="mb-6 sm:mb-16"
     >
       <apartment-type-page
         @chosen-apartments-change="updateChosenApartments($event)"
@@ -30,7 +30,7 @@
         active: currentPage === 1,
       }"
 
-      title-class="mb-16"
+      title-class="mb-6 sm:mb-16"
     >
       <apartment-price-page
         @apartment-price-change="updateApartmentPrice($event)"
@@ -47,7 +47,7 @@
         active: currentPage === 2,
       }"
 
-      title-class="mb-16"
+      title-class="mb-6 sm:mb-16"
     >
       <form-page
         @user-phone-change="updateUserPhone($event)"
@@ -64,7 +64,7 @@
         active: currentPage === 3,
       }"
 
-      title-class="md:mt-16 mb-5 text-4xl"
+      title-class="md:mt-16 mb-3 sm:mb-5 text-4xl"
     >
       <success-page
         :title="subtitles[1]"

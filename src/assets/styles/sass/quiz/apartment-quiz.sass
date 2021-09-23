@@ -24,6 +24,17 @@
         --body-transform-x: 0
 
 
+@media screen and ( max-height: 860px ) and ( min-width: 768px )
+    .apartment-quiz
+        top: 80vh
+
+@media screen and ( max-height: 720px ) and ( min-width: 768px )
+    .apartment-quiz
+        top: auto
+        bottom: var(--offset-x)
+        transform: translateY(0%)
+
+
 @media screen and ( max-width: 768px )
     .apartment-quiz
         --offset-x: 10px

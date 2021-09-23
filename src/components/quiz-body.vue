@@ -32,7 +32,6 @@
       @set-current-page="setCurrentPage($event)"
       @send-user-data="sendUserData()"
 
-      :errors="errors"
       :pages="pagesArr"
       :user-data="userData"
       :current-page="currentPage"
