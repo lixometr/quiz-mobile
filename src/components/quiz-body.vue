@@ -23,6 +23,9 @@
       :titles="textData.pageTitles"
       :subtitles="textData.subtitles"
       :apartment-types="apartmentTypes"
+      :class="{
+        'quiz-body__track_hidden': !isQuizDataLoaded,
+      }"
     />
 
     <quiz-footer

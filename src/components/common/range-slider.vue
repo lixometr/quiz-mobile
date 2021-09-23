@@ -9,7 +9,10 @@
       }"
     ></div>
 
-    <div class="range-slider__track flex-grow">
+    <div
+      class="range-slider__track flex-grow"
+      ref="rangeSliderTrack"
+    >
       <div
         class="range-slider__progress"
         :style="{
@@ -55,33 +58,35 @@ export default {
     }
   },
   mounted(){
-    const setMouseState = state => {
-      this.isMouseDown = state;
-    }
+    document.addEventListener('mousedown', this.handleMouseDown);
+    document.addEventListener('touchstart', this.handleMouseDown);
 
-    document.addEventListener('mousedown', event => this.handleMouseClick.call(this, event));
-    document.addEventListener('touchstart', event => this.handleMouseClick.call(this, event), false);
-
-    document.addEventListener('mouseup', setMouseState.bind(this, false));
-    document.addEventListener('touchend', setMouseState.bind(this, false), false);
-
-    document.addEventListener('mousemove', event => this.handleMouseMove.call(this, event));
-    document.addEventListener('touchmove', event => this.handleMouseMove.call(this, event), false);
+    document.addEventListener('mouseup', this.handleMouseUp);
+    document.addEventListener('touchend',this.handleMouseUp);
   },
   methods: {
     constrain(val, min, max){
       return val > max ? max : val < min ? min : val;
     },
-    handleMouseClick(event){
+    handleMouseDown(event){
       if(event.target.isEqualNode(this.$refs.rangeSliderKnob)){
         this.isMouseDown = true;
+
+        document.addEventListener('mousemove', this.handleMouseMove);
+        document.addEventListener('touchmove', this.handleMouseMove);
       }
     },
-    handleMouseMove(event){ // TODO: slightly strange behaviour
+    handleMouseUp(){
+      this.isMouseDown = false;
+
+      document.removeEventListener('mousemove', this.handleMouseMove);
+      document.removeEventListener('touchmove', this.handleMouseMove);
+    },
+    handleMouseMove(event){
       if(this.isMouseDown){
-        const clickX = event.x;
-        const knob = event.target;
-        const rangeSliderTrack = knob.parentNode.parentNode;
+        const clickX = event.type === 'mousemove' ? event.x : event.changedTouches[0].clientX;
+        const knob = this.$refs.rangeSliderKnob;
+        const rangeSliderTrack = this.$refs.rangeSliderTrack;
 
         const knobWidth = knob.getBoundingClientRect().width;
 

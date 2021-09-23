@@ -58,7 +58,8 @@ export default {
   async mounted(){
     this.isQuizDataLoaded = false;
 
-    await this.fetchQuizData();
+    await this.fetchQuizData()
+    .then(() => this.fetchData());
 
     this.isQuizDataLoaded = true;
   },
@@ -108,60 +109,54 @@ export default {
       return validateState;
     },
 
+    fetchData(){
+      this.fetchedQuizData = {
+        apartmentTypes: [
+          {
+            title: 'Студия',
+            isChecked: false,
+          },
+          {
+            title: '1-комнатная',
+            isChecked: false,
+          },
+          {
+            title: '2-комнатная',
+            isChecked: false,
+          },
+          {
+            title: '3-комнатная',
+            isChecked: false,
+          },
+        ],
+        rangeSlider: {
+          minValue: 100000,
+          maxValue: 3000000,
+
+          value: 1000000,
+        },
+        text: {
+          pageTitles: [
+            'Какой тип квартиры вас интересует?',
+            'Стоимость кавртиры',
+            'Найдены квартиры по вашему запросу',
+            'Спасибо!',
+          ],
+          subtitles: [
+            'Мы готовы рассказать о них! На какой номер вам позвонить?',
+            'Наш менеджер скоро свяжется с вами',
+          ],
+          agreementText: 'Нажимая на кнопку, вы даете согласие на обработку персональных данных и соглашаетесь c политикой конфиденциальности',
+        }
+      };
+
+      this.userData.price = this.fetchedQuizData.rangeSlider.value;
+    },
+
     async fetchQuizData(){ // TODO: implement fetching data from server
-      const resolve = () => {
-        setTimeout(() => {
-          this.fetchedQuizData = {
-            apartmentTypes: [
-              {
-                title: 'Студия',
-                isChecked: false,
-              },
-              {
-                title: '1-комнатная',
-                isChecked: false,
-              },
-              {
-                title: '2-комнатная',
-                isChecked: false,
-              },
-              {
-                title: '3-комнатная',
-                isChecked: false,
-              },
-            ],
-            rangeSlider: {
-              minValue: 100000,
-              maxValue: 3000000,
-
-              value: 1000000,
-            },
-            text: {
-              pageTitles: [
-                'Какой тип квартиры вас интересует?',
-                'Стоимость кавртиры',
-                'Найдены квартиры по вашему запросу',
-                'Спасибо!',
-              ],
-              subtitles: [
-                'Мы готовы рассказать о них! На какой номер вам позвонить?',
-                'Наш менеджер скоро свяжется с вами',
-              ],
-              agreementText: 'Нажимая на кнопку, вы даете согласие на обработку персональных данных и соглашаетесь c политикой конфиденциальности',
-            }
-          };
-
-          this.userData.price = this.fetchedQuizData.rangeSlider.value;
-
-          this.isQuizDataLoaded = true;
-        }, 4000);
-      }
-
-      const reject = () => {
-        console.log('Fetch error');
-      }
-
-      return new Promise(resolve, reject);
+      return new Promise((resolve) => {
+        setTimeout(resolve, 5000);
+      });
     },
 
     async sendUserData(){ // TODO: implement sending data to server

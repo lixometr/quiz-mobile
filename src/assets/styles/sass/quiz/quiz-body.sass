@@ -23,6 +23,9 @@
         &::after
             --rotate: -45deg
     &__track
-        transition: transform .3s ease-in-out 0s
+        transition: transform .3s ease-in-out 0s, opacity .4s ease-in-out 0s
+        &_hidden
+            opacity: 0
+            pointer-events: none
     &__page
         width: 100%
