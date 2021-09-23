@@ -1,6 +1,6 @@
 <template>
   <main
-    class="quiz-body__track flex"
+    class="quiz-body__track flex flex-grow"
     :style="{
       transform: `translateX(-${quizTrackTranslate}px)`,
     }"
@@ -64,7 +64,7 @@
         active: currentPage === 3,
       }"
 
-      title-class="mt-16 mb-5 text-4xl"
+      title-class="md:mt-16 mb-5 text-4xl"
     >
       <success-page
         :title="subtitles[1]"

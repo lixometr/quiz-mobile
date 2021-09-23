@@ -15,3 +15,5 @@ export const pagesMap = {
   apartmentPricePage: 1,
   formPage: 2,
 }
+
+export const MAX_PHONE_CHARACTERS = 18;

@@ -1,12 +1,12 @@
 <template>
-  <div class="flex flex-col items-center">
+  <div class="success-page flex flex-col items-center flex-grow">
     <h4 class="text-quiz-white text-2xl font-extrabold mb-4">
       {{ title }}
     </h4>
 
     <img
       src="../../assets/img/success-img.png"
-      class="block"
+      class="block success-page__img"
       :alt="title"
     >
   </div>

@@ -1,7 +1,7 @@
 <template>
-  <div class="quiz-page flex-shrink-0 px-4">
+  <div class="quiz-page flex-shrink-0 flex flex-col sm:px-4">
     <h3
-      class="quiz-page__title text-quiz-white text-2xl font-extrabold pr-3"
+      class="quiz-page__title text-quiz-white text-xl md:text-2xl font-extrabold pr-3"
       :class="titleClass"
     >
       {{ title }}

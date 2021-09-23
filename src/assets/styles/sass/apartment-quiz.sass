@@ -2,6 +2,7 @@
 
 .apartment-quiz
     --trigger-transform-x: 0
+    --trigger-size: 130px
     --body-transform-x: calc( 100% + var(--offset-x) )
     --offset-x: 25px
 
@@ -12,8 +13,34 @@
         transition: transform .7s cubic-bezier(0.38,-1.18, 0.54, 2.02) 0s
     &__trigger
         transform: translateX(var(--trigger-transform-x))
+        height: var(--trigger-size)
+        width: calc( var(--trigger-size) - 5px )
     &__body
         transform: translateX(var(--body-transform-x))
+        width: 320px
+        min-height: 610px
     &.active
         --trigger-transform-x: calc( 100% + var(--offset-x) )
         --body-transform-x: 0
+
+
+@media screen and ( max-width: 768px )
+    .apartment-quiz
+        --offset-x: 10px
+        top: auto
+        bottom: var(--offset-x)
+        transform: translateY(0%)
+        height: calc( 100% - 2 * var(--offset-x) )
+        &__body
+            min-height: auto
+            height: 100%
+        &__trigger
+            --trigger-size: 100px
+
+@media screen and ( max-width: 430px )
+    .apartment-quiz
+        width: 100%
+        padding: 0px var(--offset-x)
+        right: 0
+        &__body
+            width: calc( 100% - 2 * var(--offset-x))

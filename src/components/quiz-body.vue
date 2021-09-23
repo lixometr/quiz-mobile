@@ -1,5 +1,5 @@
 <template>
-  <div class="quiz-body rounded-lg px-6 pt-6 flex flex-col">
+  <div class="quiz-body rounded-lg px-4 sm:px-6 pt-6 flex flex-col">
     <button
       @click="$emit('toggle-quiz')"
 
@@ -17,8 +17,6 @@
       :titles="textData.pageTitles"
       :subtitles="textData.subtitles"
       :apartment-types="apartmentTypes"
-
-      class="mb-4"
     />
 
     <quiz-footer
@@ -30,6 +28,8 @@
       :user-data="userData"
       :current-page="currentPage"
       :agreement-text="textData.agreementText"
+
+      class="mt-4"
 
       v-if="currentPage !== pagesArr.length - 1"
     />

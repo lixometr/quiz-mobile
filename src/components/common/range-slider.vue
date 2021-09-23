@@ -17,11 +17,8 @@
         }"
       >
         <div
-          @mousedown="isMouseDown = true"
-          @mouseup="isMouseDown = false"
-          @mousemove="handleMouseMove"
-
           class="range-slider__knob"
+          ref="rangeSliderKnob"
         ></div>
       </div>
     </div>
@@ -57,9 +54,28 @@ export default {
       isMouseDown: false,
     }
   },
+  mounted(){
+    const setMouseState = state => {
+      this.isMouseDown = state;
+    }
+
+    document.addEventListener('mousedown', event => this.handleMouseClick.call(this, event));
+    document.addEventListener('touchstart', event => this.handleMouseClick.call(this, event), false);
+
+    document.addEventListener('mouseup', setMouseState.bind(this, false));
+    document.addEventListener('touchend', setMouseState.bind(this, false), false);
+
+    document.addEventListener('mousemove', event => this.handleMouseMove.call(this, event));
+    document.addEventListener('touchmove', event => this.handleMouseMove.call(this, event), false);
+  },
   methods: {
     constrain(val, min, max){
       return val > max ? max : val < min ? min : val;
+    },
+    handleMouseClick(event){
+      if(event.target.isEqualNode(this.$refs.rangeSliderKnob)){
+        this.isMouseDown = true;
+      }
     },
     handleMouseMove(event){ // TODO: slightly strange behaviour
       if(this.isMouseDown){

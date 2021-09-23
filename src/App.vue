@@ -1,7 +1,7 @@
 <template>
   <aside
     id="apartment-quiz"
-    class="apartment-quiz flex flex-col items-end z-30 fixed"
+    class="apartment-quiz flex flex-col justify-end items-end z-30 fixed"
 
     :class="{
       active: isQuizOpened,
@@ -36,7 +36,7 @@
 <script>
 import quizTrigger from './components/quiz-trigger.vue';
 import quizBody from './components/quiz-body.vue';
-import { EmptyUserObject, EmptyErrorsObject, pagesMap } from '../constants.js';
+import { EmptyUserObject, EmptyErrorsObject, MAX_PHONE_CHARACTERS, pagesMap } from '../constants.js';
 
 export default {
   name: 'App',
@@ -94,7 +94,7 @@ export default {
       }
 
       if(currentPage === pagesMap.formPage || validateAll){
-        this.errors.phoneError = userData.phone.length < 2; // TODO: implement correct phone validation
+        this.errors.phoneError = userData.phone.length !== MAX_PHONE_CHARACTERS;
 
         validateState = validateState && !this.errors.phoneError;
       }
