@@ -1,0 +1,51 @@
+@import ../variables
+
+@keyframes spin
+    0%
+        transform: rotate( 0deg )
+
+    100%
+        transform: rotate( 360deg )
+
+.quiz-preloader
+    position: absolute
+    top: 45%
+    left: 50%
+    transform: translate(-50%, -50%)
+    transition: opacity .3s ease-in 0s, visibility .3s ease-in 0s
+    pointer-events: none
+    &_hidden
+        opacity: 0
+        visibility: hidden
+    &__loader
+        position: relative
+        width: 150px
+        height: 150px
+        border-radius: 50%
+        border: 3px solid transparent
+        border-top-color: var(--quiz-white)
+        animation: spin 2s linear infinite
+
+        &::before, &::after
+            content: ''
+            display: block
+            position: absolute
+            border-radius: 50%
+            border: 2px solid transparent
+            border-top-color: var(--quiz-white)
+            animation: spin linear infinite
+            transition-duration: 0s
+
+        &::before
+            top: 5px
+            left: 5px
+            right: 5px
+            bottom: 5px
+            animation-duration: 3s
+
+        &::after
+            top: 15px
+            left: 15px
+            right: 15px
+            bottom: 15px
+            animation-duration: 1.5s

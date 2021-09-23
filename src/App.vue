@@ -17,6 +17,7 @@
 
       :apartment-types="fetchedQuizData.apartmentTypes"
       :slider-data="fetchedQuizData.rangeSlider"
+      :is-quiz-data-loaded="isQuizDataLoaded"
       :text-data="fetchedQuizData.text"
       :current-page="currentPage"
       :user-data="userData"
@@ -43,6 +44,7 @@ export default {
   data(){
     return {
       isQuizOpened: false,
+      isQuizDataLoaded: false,
       currentPage: 0,
       fetchedQuizData: {},
       userData: {
@@ -54,7 +56,11 @@ export default {
     }
   },
   async mounted(){
+    this.isQuizDataLoaded = false;
+
     await this.fetchQuizData();
+
+    this.isQuizDataLoaded = true;
   },
   methods: {
     toggleQuiz(){
@@ -102,7 +108,7 @@ export default {
       return validateState;
     },
 
-    async fetchQuizData(){
+    async fetchQuizData(){ // TODO: implement fetching data from server
       const resolve = () => {
         setTimeout(() => {
           this.fetchedQuizData = {
@@ -146,7 +152,9 @@ export default {
           };
 
           this.userData.price = this.fetchedQuizData.rangeSlider.value;
-        }, 400);
+
+          this.isQuizDataLoaded = true;
+        }, 4000);
       }
 
       const reject = () => {
@@ -156,9 +164,9 @@ export default {
       return new Promise(resolve, reject);
     },
 
-    async sendUserData(){
+    async sendUserData(){ // TODO: implement sending data to server
       if(this.validateUserData(this.userData, -1, true)){
-        console.log('Send data', this.userData); // TODO: implement sending data to server
+        console.log('Send data', this.userData);
       }
     },
 

@@ -6,6 +6,12 @@
       class="quiz-body__close ml-auto"
     ></button>
 
+    <quiz-preloader
+      :class="{
+        'quiz-preloader_hidden': isQuizDataLoaded,
+      }"
+    />
+
     <quiz-track
       @user-phone-change="updateUserPhone($event)"
       @apartment-price-change="updateApartmentPrice($event)"
@@ -39,6 +45,7 @@
 <script>
 import quizTrack from './quiz-track.vue';
 import quizFooter from './quiz-footer.vue';
+import quizPreloader from './common/quiz-preloader.vue';
 import { EmptyErrorsObject } from '../../constants.js';
 
 export default {
@@ -76,6 +83,10 @@ export default {
       default: function(){
         return { ...EmptyErrorsObject }
       }
+    },
+    isQuizDataLoaded: {
+      type: Boolean,
+      default: true,
     }
   },
   data(){
@@ -129,6 +140,7 @@ export default {
   components: {
     quizTrack,
     quizFooter,
+    quizPreloader,
   }
 }
 </script>
