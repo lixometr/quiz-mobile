@@ -8,17 +8,20 @@
     }"
   >
     <quiz-body
-      @toggle-quiz="toggleQuiz"
+      @toggle-quiz="toggleQuiz()"
+      @send-user-data="sendUserData()"
+      @update:current-page="currentPage = $event"
 
       :apartment-types="fetchedQuizData.apartmentTypes"
       :slider-data="fetchedQuizData.rangeSlider"
       :text-data="fetchedQuizData.text"
+      :current-page="currentPage"
 
       class="apartment-quiz__body z-10 absolute bottom-0"
     />
 
     <quiz-trigger
-      @toggle-quiz="toggleQuiz"
+      @toggle-quiz="toggleQuiz()"
 
       class="apartment-quiz__trigger absolute bottom-0"
     />
@@ -34,6 +37,7 @@ export default {
   data(){
     return {
       isQuizOpened: false,
+      currentPage: 0,
       fetchedQuizData: {
         apartmentTypes: [
           {
@@ -50,9 +54,10 @@ export default {
           },
         ],
         rangeSlider: {
-          minValue: 0,
-          maxValue: 3000,
-          value: 1000,
+          minValue: 100000,
+          maxValue: 3000000,
+
+          value: 1000000,
         },
         text: {
           pageTitles: [
@@ -78,6 +83,14 @@ export default {
   methods: {
     toggleQuiz(){
       this.isQuizOpened = !this.isQuizOpened;
+
+      if(!this.isQuizOpened){
+        this.currentPage = 0;
+      }
+    },
+
+    async sendUserData(){
+      console.log('Send data'); // TODO: implement sending data to server
     },
   },
   components: {

@@ -16,15 +16,15 @@
       class="mb-4"
     />
 
-    <!-- TODO: remove '|| true' -->
     <quiz-footer
       @set-current-page="setCurrentPage($event)"
+      @send-user-data="sendUserData()"
 
       :pages="pagesArr"
       :current-page="currentPage"
       :agreement-text="textData.agreementText"
 
-      v-if="currentPage !== pagesArr.length - 1 || true"
+      v-if="currentPage !== pagesArr.length - 1"
     />
   </div>
 </template>
@@ -53,10 +53,14 @@ export default {
         return {};
       }
     },
+    currentPage: {
+      type: Number,
+      default: 0,
+    }
   },
   data(){
     return {
-      currentPage: 1,
+      cCurrentPage: this.currentPage,
       pagesArr: [
         {
           isVisited: true,
@@ -75,10 +79,18 @@ export default {
   },
   methods: {
     setCurrentPage(page){
-      this.currentPage = page;
+      this.cCurrentPage = page;
+      this.$emit('update:current-page', page);
+    },
 
+    sendUserData(){
+      this.$emit('send-user-data');
+    },
+  },
+  watch: {
+    currentPage(newPage){
       this.pagesArr.forEach((page, index) => {
-        page.isVisited = index <= this.currentPage;
+        page.isVisited = index <= newPage;
       });
     }
   },

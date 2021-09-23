@@ -39,7 +39,7 @@
 
     <template v-else-if="currentPage === 2">
       <button
-        @click="setCurrentPage(currentPage + 1)"
+        @click="sendUserData()"
 
         class="quiz-footer__navigator quiz-footer__navigator_submit w-full rounded-md text-quiz-white text-center px-2 font-medium text-lg mb-3"
       >
@@ -76,7 +76,12 @@ export default {
   methods: {
     setCurrentPage(page){
       this.$emit('set-current-page', page)
-    }
+    },
+
+    sendUserData(){
+      this.$emit('send-user-data');
+      this.setCurrentPage(this.currentPage + 1);
+    },
   },
   components: {
     quizPaginationItem,

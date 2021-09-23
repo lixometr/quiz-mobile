@@ -57,9 +57,11 @@
         active: currentPage === 3,
       }"
 
-      title-class="mb-16"
+      title-class="mt-16 mb-5 text-4xl"
     >
-
+      <success-page
+        :title="subtitles[1]"
+      />
     </quiz-page>
   </main>
 </template>
@@ -67,6 +69,7 @@
 <script>
 import quizPage from './quiz-page.vue';
 import formPage from './pages/form-page.vue';
+import successPage from './pages/success-page.vue';
 import apartmentTypePage from './pages/apartment-type-page.vue';
 import apartmentPricePage from './pages/apartment-price-page.vue';
 
@@ -127,6 +130,7 @@ export default {
   components: {
     quizPage,
     formPage,
+    successPage,
     apartmentTypePage,
     apartmentPricePage,
   }
