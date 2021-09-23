@@ -4,6 +4,7 @@
       @update:is-checked="chooseApartment(index, $event)"
 
       :is-checked="type.isChecked"
+      :is-error="isError"
       :class="{
         'mb-3': index !== cApartmentTypes.length - 1
       }"
@@ -27,16 +28,14 @@ export default {
         return [];
       }
     },
+    isError: {
+      type: Boolean,
+      default: false,
+    },
   },
   data(){
     return {
-      cApartmentTypes: this.apartmentTypes
-        .map(type => {
-          return {
-            ...type,
-            isChecked: false,
-          }
-        })
+      cApartmentTypes: this.apartmentTypes,
     }
   },
   methods: {
@@ -48,6 +47,11 @@ export default {
         .filter(type => type !== null);
 
       this.$emit('chosen-apartments-change', chosenTypes);
+    }
+  },
+  watch: {
+    apartmentTypes(newTypes){
+      this.cApartmentTypes = [...newTypes];
     }
   },
   components: {

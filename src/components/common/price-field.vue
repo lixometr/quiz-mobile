@@ -1,5 +1,10 @@
 <template>
-  <div class="apartment-price__field rounded-lg px-4 py-4 font-bold text-lg">
+  <div
+    class="apartment-price__field rounded-lg px-4 py-4 font-bold text-lg"
+    :class="{
+      'invalid': isError,
+    }"
+  >
     <span class="apartment-price__field-price">
       {{ formattedChosenPrice }}
     </span>
@@ -16,7 +21,11 @@ export default {
     chosenPrice: {
       type: [String, Number],
       default: 0,
-    }
+    },
+    isError: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     formattedChosenPrice(){

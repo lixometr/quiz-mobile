@@ -2,11 +2,12 @@
   <div class="apartment-price">
     <price-field
       :chosen-price="chosenPrice"
+      :is-error="isError"
       class="mb-11"
     />
 
     <range-slider
-      @input="chosenPrice = $event"
+      @input="updateChosenPrice($event)"
 
       :min-value="sliderData.minValue"
       :max-value="sliderData.maxValue"
@@ -26,12 +27,28 @@ export default {
       default: function(){
         return {};
       }
-    }
+    },
+    isError: {
+      type: Boolean,
+      default: false,
+    },
   },
   data(){
     return {
       chosenPrice: this.sliderData.value,
     }
+  },
+  methods: {
+    updateChosenPrice(price){
+      this.chosenPrice = price;
+
+      this.$emit('apartment-price-change', price);
+    },
+  },
+  watch: {
+    sliderData(newData){
+      this.updateChosenPrice(newData.value);
+    },
   },
   components: {
     priceField,

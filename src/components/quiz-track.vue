@@ -16,9 +16,10 @@
       title-class="mb-16"
     >
       <apartment-type-page
-        @chosen-apartments-change="updateChosenApartments"
+        @chosen-apartments-change="updateChosenApartments($event)"
 
         :apartment-types="apartmentTypes"
+        :is-error="errors.apartmentTypeError"
       />
     </quiz-page>
 
@@ -32,7 +33,10 @@
       title-class="mb-16"
     >
       <apartment-price-page
+        @apartment-price-change="updateApartmentPrice($event)"
+
         :slider-data="sliderData"
+        :is-error="errors.priceError"
       />
     </quiz-page>
 
@@ -46,7 +50,10 @@
       title-class="mb-16"
     >
       <form-page
+        @user-phone-change="updateUserPhone($event)"
+
         :title="subtitles[0]"
+        :is-error="errors.phoneError"
       />
     </quiz-page>
 
@@ -72,6 +79,7 @@ import formPage from './pages/form-page.vue';
 import successPage from './pages/success-page.vue';
 import apartmentTypePage from './pages/apartment-type-page.vue';
 import apartmentPricePage from './pages/apartment-price-page.vue';
+import { EmptyErrorsObject } from '../../constants.js';
 
 export default {
   props: {
@@ -91,17 +99,23 @@ export default {
         return {};
       }
     },
+    errors: {
+      type: Object,
+      default: function(){
+        return { ...EmptyErrorsObject };
+      },
+    },
     titles: {
       type: Array,
       default: function(){
         return [];
-      }
+      },
     },
     subtitles: {
       type: Array,
       default: function(){
         return [];
-      }
+      },
     }
   },
   data(){
@@ -118,8 +132,17 @@ export default {
     updatePageWidth(){
       this.quizPageWidth = this.$refs.quizPage.$el.getBoundingClientRect().width;
     },
+
     updateChosenApartments(apartments){
-      console.log(apartments);
+      this.$emit('chosen-apartments-change', apartments)
+    },
+
+    updateApartmentPrice(price){
+      this.$emit('apartment-price-change', price);
+    },
+
+    updateUserPhone(phone){
+      this.$emit('user-phone-change', phone);
     }
   },
   computed: {

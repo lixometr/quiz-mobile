@@ -5,8 +5,10 @@
     &__fake
         width: 30px
         height: 30px
-        background-color: var(--quiz-text-white)
+        border: 2px solid var(--quiz-white)
+        background-color: var(--quiz-white)
         background-repeat: no-repeat
         background-position: center
+        transition: border-color .2s ease-in
     &__input:checked + &__fake
             background-image: url(../../img/checkbox-tip.svg)

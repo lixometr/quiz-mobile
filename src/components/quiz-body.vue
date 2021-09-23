@@ -7,6 +7,11 @@
     ></button>
 
     <quiz-track
+      @user-phone-change="updateUserPhone($event)"
+      @apartment-price-change="updateApartmentPrice($event)"
+      @chosen-apartments-change="updateChosenApartments($event)"
+
+      :errors="errors"
       :slider-data="sliderData"
       :current-page="currentPage"
       :titles="textData.pageTitles"
@@ -20,7 +25,9 @@
       @set-current-page="setCurrentPage($event)"
       @send-user-data="sendUserData()"
 
+      :errors="errors"
       :pages="pagesArr"
+      :user-data="userData"
       :current-page="currentPage"
       :agreement-text="textData.agreementText"
 
@@ -32,6 +39,7 @@
 <script>
 import quizTrack from './quiz-track.vue';
 import quizFooter from './quiz-footer.vue';
+import { EmptyErrorsObject } from '../../constants.js';
 
 export default {
   props: {
@@ -53,9 +61,21 @@ export default {
         return {};
       }
     },
+    userData: {
+      type: Object,
+      default: function(){
+        return {};
+      }
+    },
     currentPage: {
       type: Number,
       default: 0,
+    },
+    errors: {
+      type: Object,
+      default: function(){
+        return { ...EmptyErrorsObject }
+      }
     }
   },
   data(){
@@ -85,6 +105,18 @@ export default {
 
     sendUserData(){
       this.$emit('send-user-data');
+    },
+
+    updateChosenApartments(apartments){
+      this.$emit('chosen-apartments-change', apartments)
+    },
+
+    updateApartmentPrice(price){
+      this.$emit('apartment-price-change', price);
+    },
+
+    updateUserPhone(phone){
+      this.$emit('user-phone-change', phone);
     },
   },
   watch: {

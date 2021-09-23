@@ -5,11 +5,17 @@
 
       type="checkbox"
       class="quiz-checkbox__input invisible absolute opacity-0"
+
       :name="checkboxName"
       :checked="isChecked"
     >
 
-    <div class="quiz-checkbox__fake rounded-lg mr-6 "></div>
+    <div
+      class="quiz-checkbox__fake rounded-lg mr-6"
+      :class="{
+        'invalid': isError,
+      }"
+    ></div>
 
     <span class="quiz-checkbox__text font-bold text-quiz-black text-lg">
       <slot></slot>
@@ -25,6 +31,10 @@ export default {
       default: 'quiz-checkbox',
     },
     isChecked: {
+      type: Boolean,
+      default: false,
+    },
+    isError: {
       type: Boolean,
       default: false,
     },

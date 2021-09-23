@@ -2,7 +2,7 @@
   <footer class="quiz-body__footer quiz-footer mt-auto pb-4">
     <ul class="quiz-footer__pagination mb-6 flex w-100 pt-3">
       <quiz-pagination-item
-        @click.native="setCurrentPage(index)"
+        @click.native="paginationClickHandler(index)"
 
         :index="index"
         :is-visited="page.isVisited"
@@ -72,8 +72,20 @@ export default {
         return [];
       },
     },
+    userData: {
+      type: Object,
+      default: function(){
+        return {};
+      }
+    },
   },
   methods: {
+    paginationClickHandler(index){
+      if(this.pages[index].isVisited){
+        this.setCurrentPage(index);
+      }
+    },
+
     setCurrentPage(page){
       this.$emit('set-current-page', page)
     },
