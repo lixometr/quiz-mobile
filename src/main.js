@@ -1,10 +1,13 @@
 import Vue from 'vue'
 import App from './App.vue'
+
+import './assets/styles/css/tailwind.css'
 import './assets/styles/sass/index.sass'
-import 'tailwindcss/dist/tailwind.min.css'
 
 Vue.config.productionTip = false
 
-new Vue({
+const app = new Vue({
   render: h => h(App),
-}).$mount('#apartment-quiz')
+});
+
+app.$mount('#apartment-quiz');
