@@ -1,0 +1,17 @@
+@import ../variables
+
+.apartment-types-page
+    max-height: 270px
+    overflow-x: hidden
+    overflow-y: auto
+    scrollbar-width: thin
+    scrollbar-color: var(--quiz-back, --quiz-bg) var(--quiz-white)
+    &::-webkit-scrollbar
+        background-color: var(--quiz-white)
+        width: 10px
+        border-radius: 5px
+    &::-webkit-scrollbar-thumb
+        background-color: var(--quiz-back, --quiz-bg)
+        border-radius: 5px
+        border: 2px solid var(--quiz-white)
+

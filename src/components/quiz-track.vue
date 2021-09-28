@@ -20,6 +20,7 @@
 
         :apartment-types="apartmentTypes"
         :is-error="errors.apartmentTypeError"
+        :max-question-length="maxQuestionLength"
 
         class="mb-4"
       />
@@ -105,6 +106,10 @@ export default {
       default: function(){
         return {};
       }
+    },
+    maxQuestionLength: {
+      type: Number,
+      default: 0,
     },
     errors: {
       type: Object,

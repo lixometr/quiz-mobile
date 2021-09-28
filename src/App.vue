@@ -19,6 +19,7 @@
       :success-page-image="fetchedQuizData.successPageImage"
       :apartment-types="fetchedQuizData.apartmentTypes"
       :slider-data="fetchedQuizData.rangeSlider"
+      :max-question-length="maxQuestionLength"
       :is-quiz-data-loaded="isQuizDataLoaded"
       :text-data="fetchedQuizData.text"
       :current-page="currentPage"
@@ -51,6 +52,7 @@ export default {
       isQuizOpened: false,
       isQuizDataLoaded: false,
       currentPage: 0,
+      maxQuestionLength: 0,
       fetchedQuizData: {},
       targetsData: {},
       colorsData: {},
@@ -82,8 +84,11 @@ export default {
       sendButtonText,
       apartmentTypes,
       successPageImage,
+      maxQuestionLength,
       nextPageButtonText,
     } = this.mapQuizData(quizData);
+
+    this.maxQuestionLength = maxQuestionLength;
 
     this.quizTriggerData = {
       ...triggerData,
@@ -96,8 +101,6 @@ export default {
     this.colorsData = {
       ...colorsData,
     }
-
-    console.log(colorsData);
 
     this.fetchedQuizData = {
       apartmentTypes,
@@ -127,6 +130,7 @@ export default {
       const colorsData = quizData.colors;
       const targetsData = quizData.targets;
       const nextPageButtonText = quizData.screens.button;
+      const maxQuestionLength = quizData.screens.questions;
 
       const pageTitles =
         quizData.screens.items
@@ -164,17 +168,18 @@ export default {
             });
 
       return {
-        triggerData,
-        colorsData,
-        targetsData,
-        apartmentTypes,
-        rangeSlider,
-        pageTitles,
         subtitles,
+        pageTitles,
+        colorsData,
+        rangeSlider,
+        triggerData,
+        targetsData,
         agreementText,
-        nextPageButtonText,
         sendButtonText,
+        apartmentTypes,
         successPageImage,
+        maxQuestionLength,
+        nextPageButtonText,
       }
     },
 
@@ -249,12 +254,18 @@ export default {
 
     async sendUserData(){
       if(this.validateUserData(this.userData, -1, true)){
+        const formData = new FormData();
+        const {userPhone, answers} = this.mapUserData(this.userData);
+
+        formData.set('phone', userPhone);
+        formData.set('answers', answers);
+
         await fetch(apiPaths.postPath, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json;charset=utf-8'
+            'Content-Type': 'multipart/form-data'
           },
-          body: JSON.stringify(this.mapUserData(this.userData))
+          body: formData,
         })
         .then(res => console.log(res))
         .catch(err => console.log(err));

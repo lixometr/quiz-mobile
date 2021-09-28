@@ -1,7 +1,7 @@
 <template>
   <label class="quiz-checkbox flex items-center select-none cursor-pointer">
     <input
-      @input="$emit('update:is-checked', $event.target.checked)"
+      @input="updateIsChecked($event)"
 
       type="checkbox"
       class="quiz-checkbox__input invisible absolute opacity-0"
@@ -38,6 +38,17 @@ export default {
       type: Boolean,
       default: false,
     },
-  }
+    isAvailable: {
+      type: Boolean,
+      default: false,
+    }
+  },
+  methods: {
+    updateIsChecked(event){
+      const state = event.target.checked;
+
+      this.$emit('update:is-checked', state);
+    }
+  },
 }
 </script>

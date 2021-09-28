@@ -4,10 +4,25 @@
     &__fake
         width: 30px
         height: 30px
+        flex-shrink: 0
         border: 2px solid var(--quiz-white)
         background-color: var(--quiz-white)
-        background-repeat: no-repeat
-        background-position: center
+        position: relative
         transition: border-color .2s ease-in
+        &::after, &::before
+            content: ''
+            display: none
+            position: absolute
+            top: 50%
+            left: 50%
+            height: 5px
+            background-color: var(--quiz-button_back, --quiz-accent)
+        &::after
+            width: 12px
+            transform: translate(-83%, -16%) rotate(45deg)
+        &::before
+            width: 17px
+            transform: translate(-37%, -50%) rotate(-45deg)
     &__input:checked + &__fake
-            background-image: url(../../img/checkbox-tip.svg)
+        &::after, &::before
+            display: block

@@ -1,9 +1,10 @@
 <template>
-  <div class="flex flex-col">
+  <div class="flex flex-col apartment-types-page">
     <custom-checkbox
       @update:is-checked="chooseApartment(index, $event)"
 
       :is-checked="type.isChecked"
+      :is-available="isAvailableToCheck"
       :is-error="isError"
       :class="{
         'mb-3': index !== cApartmentTypes.length - 1
@@ -32,15 +33,32 @@ export default {
       type: Boolean,
       default: false,
     },
+    maxQuestionLength: {
+      type: Number,
+      default: 0,
+    },
   },
   data(){
     return {
       cApartmentTypes: this.apartmentTypes,
+      isAvailableToCheck: true,
     }
   },
   methods: {
     chooseApartment(index, state){
       this.cApartmentTypes[index].isChecked = state;
+
+      const chosenTypesLength = this.cApartmentTypes.filter(t => t.isChecked).length;
+
+      if(chosenTypesLength > this.maxQuestionLength){
+        this.cApartmentTypes[index].isChecked = true;
+
+        this.$nextTick(() => {
+          this.cApartmentTypes[index].isChecked = false;
+        })
+
+        return;
+      }
 
       const chosenTypes = this.cApartmentTypes
         .map((type, index) => type.isChecked ? index : null)

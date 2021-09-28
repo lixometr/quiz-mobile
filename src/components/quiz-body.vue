@@ -24,6 +24,7 @@
       :subtitles="textData.subtitles"
       :apartment-types="apartmentTypes"
       :success-page-image="successPageImage"
+      :max-question-length="maxQuestionLength"
       :class="{
         'quiz-body__track_hidden': !isQuizDataLoaded,
       }"
@@ -37,8 +38,8 @@
       :user-data="userData"
       :current-page="currentPage"
       :agreement-text="textData.agreementText"
-      :next-page-button-text="textData.nextPageButtonText"
       :send-button-text="textData.sendButtonText"
+      :next-page-button-text="textData.nextPageButtonText"
 
       class="mt-4"
 
@@ -80,6 +81,10 @@ export default {
       }
     },
     currentPage: {
+      type: Number,
+      default: 0,
+    },
+    maxQuestionLength: {
       type: Number,
       default: 0,
     },
