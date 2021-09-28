@@ -6,6 +6,7 @@
     :class="{
       active: isQuizOpened,
     }"
+    :style="cssVars"
   >
     <quiz-body
       @toggle-quiz="toggleQuiz()"
@@ -15,6 +16,7 @@
       @apartment-price-change="updateApartmentPrice($event)"
       @chosen-apartments-change="updateChosenApartments($event)"
 
+      :success-page-image="fetchedQuizData.successPageImage"
       :apartment-types="fetchedQuizData.apartmentTypes"
       :slider-data="fetchedQuizData.rangeSlider"
       :is-quiz-data-loaded="isQuizDataLoaded"
@@ -29,6 +31,9 @@
     <quiz-trigger
       @toggle-quiz="toggleQuiz()"
 
+      :trigger-text="quizTriggerData.text"
+      :trigger-icon="quizTriggerData.icon"
+
       class="apartment-quiz__trigger"
     />
   </aside>
@@ -37,7 +42,7 @@
 <script>
 import quizTrigger from './components/quiz-trigger.vue';
 import quizBody from './components/quiz-body.vue';
-import { EmptyUserObject, EmptyErrorsObject, MAX_PHONE_CHARACTERS, pagesMap } from '../constants.js';
+import { EmptyUserObject, EmptyErrorsObject, MAX_PHONE_CHARACTERS, pagesMap, apiPaths, pagesId } from '../constants.js';
 
 export default {
   name: 'App',
@@ -47,6 +52,12 @@ export default {
       isQuizDataLoaded: false,
       currentPage: 0,
       fetchedQuizData: {},
+      targetsData: {},
+      colorsData: {},
+      quizTriggerData: {
+        icon: '',
+        text: '',
+      },
       userData: {
         ...EmptyUserObject,
       },
@@ -58,12 +69,131 @@ export default {
   async mounted(){
     this.isQuizDataLoaded = false;
 
-    await this.fetchQuizData()
-    .then(() => this.fetchData());
+    const quizData = await this.fetchQuizData();
+
+    const {
+      subtitles,
+      pageTitles,
+      colorsData,
+      triggerData,
+      targetsData,
+      rangeSlider,
+      agreementText,
+      sendButtonText,
+      apartmentTypes,
+      successPageImage,
+      nextPageButtonText,
+    } = this.mapQuizData(quizData);
+
+    this.quizTriggerData = {
+      ...triggerData,
+    }
+
+    this.targetsData = {
+      ...targetsData,
+    }
+
+    this.colorsData = {
+      ...colorsData,
+    }
+
+    console.log(colorsData);
+
+    this.fetchedQuizData = {
+      apartmentTypes,
+      successPageImage,
+      rangeSlider: {
+        minValue: rangeSlider.min,
+        maxValue: rangeSlider.max,
+
+        value: rangeSlider.default,
+      },
+      text: {
+        pageTitles,
+        subtitles,
+        agreementText,
+        nextPageButtonText,
+        sendButtonText,
+      }
+    };
+
+    this.userData.price = rangeSlider.default;
 
     this.isQuizDataLoaded = true;
   },
   methods: {
+    mapQuizData(quizData){
+      const triggerData = quizData.button;
+      const colorsData = quizData.colors;
+      const targetsData = quizData.targets;
+      const nextPageButtonText = quizData.screens.button;
+
+      const pageTitles =
+        quizData.screens.items
+          .map(page => page.title);
+
+      const subtitles =
+        quizData.screens.items
+          .map(page => page.text)
+          .filter(t => !!t);
+
+      const agreementText =
+        quizData.screens.items
+          .find(screen => screen.id === pagesId.phone).text_bottom;
+
+      const sendButtonText =
+        quizData.screens.items
+          .find(screen => screen.id === pagesId.phone).button;
+
+      const successPageImage =
+        quizData.screens.items
+          .find(screen => screen.id === pagesId.final).image;
+
+      const rangeSlider =
+        quizData.screens.items
+          .find(screen => screen.id === pagesId.price).values;
+
+      const apartmentTypes =
+        quizData.screens.items
+          .find(screen => screen.id === pagesId.rooms).values
+            .map(type => {
+              return {
+                title: type,
+                isChecked: false,
+              }
+            });
+
+      return {
+        triggerData,
+        colorsData,
+        targetsData,
+        apartmentTypes,
+        rangeSlider,
+        pageTitles,
+        subtitles,
+        agreementText,
+        nextPageButtonText,
+        sendButtonText,
+        successPageImage,
+      }
+    },
+
+    mapUserData(userData){
+      const answers = {}
+
+      answers[pagesId.rooms] = userData.apartmentTypes
+        .map(type => this.fetchedQuizData.apartmentTypes[type].title);
+
+      answers[pagesId.price] = `${userData.price}`;
+
+      const mappedUserData = {
+        answers,
+        phone: this.userData.phone,
+      }
+
+      return mappedUserData;
+    },
+
     toggleQuiz(){
       this.isQuizOpened = !this.isQuizOpened;
 
@@ -109,59 +239,52 @@ export default {
       return validateState;
     },
 
-    fetchData(){
-      this.fetchedQuizData = {
-        apartmentTypes: [
-          {
-            title: 'Студия',
-            isChecked: false,
-          },
-          {
-            title: '1-комнатная',
-            isChecked: false,
-          },
-          {
-            title: '2-комнатная',
-            isChecked: false,
-          },
-          {
-            title: '3-комнатная',
-            isChecked: false,
-          },
-        ],
-        rangeSlider: {
-          minValue: 100000,
-          maxValue: 3000000,
-
-          value: 1000000,
-        },
-        text: {
-          pageTitles: [
-            'Какой тип квартиры вас интересует?',
-            'Стоимость кавртиры',
-            'Найдены квартиры по вашему запросу',
-            'Спасибо!',
-          ],
-          subtitles: [
-            'Мы готовы рассказать о них! На какой номер вам позвонить?',
-            'Наш менеджер скоро свяжется с вами',
-          ],
-          agreementText: 'Нажимая на кнопку, вы даете согласие на обработку персональных данных и соглашаетесь c политикой конфиденциальности',
-        }
-      };
-
-      this.userData.price = this.fetchedQuizData.rangeSlider.value;
+    async fetchQuizData(){
+      return await fetch(apiPaths.getPath, {
+        method: 'POST',
+      })
+        .then(res => res.json())
+        .catch(err => console.log(err.response));
     },
 
-    async fetchQuizData(){ // TODO: implement fetching data from server
-      return new Promise((resolve) => {
-        setTimeout(resolve, 5000);
-      });
-    },
-
-    async sendUserData(){ // TODO: implement sending data to server
+    async sendUserData(){
       if(this.validateUserData(this.userData, -1, true)){
-        console.log('Send data', this.userData);
+        await fetch(apiPaths.postPath, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json;charset=utf-8'
+          },
+          body: JSON.stringify(this.mapUserData(this.userData))
+        })
+        .then(res => console.log(res))
+        .catch(err => console.log(err));
+
+        await this.sendMetrics();
+      }
+    },
+
+    async sendMetrics(){
+      if (typeof gtag === 'function'){
+
+        // eslint-disable-next-line no-undef
+        gtag(
+          'event',
+          this.targetsData.google[0],
+          {
+            event_category: this.targetsData.google[1],
+            event_label: this.targetsData.google[2],
+          },
+        );
+      }
+
+      if (typeof ym === 'function' && this.targetsData.yandex.yMetrikaId){
+        // eslint-disable-next-line no-undef
+        ym(
+          this.targetsData.yandex.yMetrikaId,
+          'reachGoal',
+          this.targetsData.yandex.yandexTarget,
+          {},
+        );
       }
     },
 
@@ -183,6 +306,18 @@ export default {
         ...errors,
       }
     },
+  },
+  computed: {
+    cssVars(){
+      const stylesObj = {};
+
+      Object.keys(this.colorsData)
+      .forEach(key => {
+        stylesObj[`--quiz-${key}`] = this.colorsData[key];
+      })
+
+      return stylesObj;
+    }
   },
   components: {
     quizTrigger,

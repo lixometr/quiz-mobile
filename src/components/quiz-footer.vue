@@ -33,7 +33,7 @@
 
         class="quiz-footer__navigator quiz-footer__navigator_next flex-grow rounded-md text-quiz-white text-left pl-8 font-medium text-lg"
       >
-        Далее
+        {{ nextPageButtonText }}
       </button>
     </div>
 
@@ -43,12 +43,14 @@
 
         class="quiz-footer__navigator quiz-footer__navigator_submit w-full rounded-md text-quiz-white text-center px-2 font-medium text-lg mb-3"
       >
-        Отправить
+        {{ sendButtonText }}
       </button>
 
-      <p class="pl-5 pb-3 text-xs text-quiz-white leading-3 sm:leading-4">
-        {{ agreementText }}
-      </p>
+      <p
+        class="pl-5 pb-3 text-xs text-quiz-white leading-3 sm:leading-4 quiz-footer__agreement"
+
+        v-html="agreementText"
+      ></p>
     </template>
   </footer>
 </template>
@@ -77,6 +79,14 @@ export default {
       default: function(){
         return {};
       }
+    },
+    nextPageButtonText: {
+      type: String,
+      default: 'Далее',
+    },
+    sendButtonText: {
+      type: String,
+      default: 'Отправить',
     },
   },
   methods: {

@@ -4,17 +4,28 @@
     @click="$emit('toggle-quiz')"
   >
     <img
-      src="../assets/img/building-icon.svg"
+      :src="triggerIcon"
       alt="Иконка квартиры"
       class="quiz-trigger__icon mb-1 sm:mb-2"
     >
 
     <span class="quiz-trigger__label text-center text-quiz-white text-xs sm:text-sm">
-      Подобрать квартиру
+      {{ triggerText }}
     </span>
   </button>
 </template>
 
 <script>
-
+export default {
+  props: {
+    triggerText: {
+      type: String,
+      default: 'Подобрать квартиру',
+    },
+    triggerIcon: {
+      type: String,
+      default: '',
+    },
+  }
+}
 </script>

@@ -68,6 +68,7 @@
     >
       <success-page
         :title="subtitles[1]"
+        :success-page-image="successPageImage"
       />
     </quiz-page>
   </main>
@@ -86,6 +87,10 @@ export default {
     currentPage: {
       type: Number,
       default: 0,
+    },
+    successPageImage: {
+      type: String,
+      default: '',
     },
     apartmentTypes: {
       type: Array,

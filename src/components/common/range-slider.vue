@@ -96,7 +96,7 @@ export default {
 
         const knobLeftPersentage = (absoluteKnobLeft - absoluteRangeSliderTrackLeft - knobWidth / 6) / rangeSliderTrackWidth;
 
-        this.setValue(this.maxValue * knobLeftPersentage);
+        this.setValue((this.minValue - this.maxValue) * (1 - knobLeftPersentage) + this.maxValue);
       }
     },
     setValue(value){
@@ -107,7 +107,7 @@ export default {
   },
   computed: {
     progressPersentage(){
-      return (this.value / this.maxValue) * 100;
+      return ((this.value - this.minValue) / (this.maxValue - this.minValue)) * 100;
     }
   }
 }

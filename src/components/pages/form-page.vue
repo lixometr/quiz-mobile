@@ -12,7 +12,7 @@
       type="tel"
       ref="maskedInput"
       placeholder="+7"
-      class="quiz-form-page__input p-4 rounded-lg outline-none text-lg font-bold block"
+      class="quiz-form-page__input text-quiz-value p-4 rounded-lg outline-none text-lg font-bold block"
 
       :class="{
         'invalid': isError,

@@ -5,8 +5,8 @@
     </h4>
 
     <img
-      src="../../assets/img/success-img.png"
       class="block success-page__img"
+      :src="successPageImage"
       :alt="title"
     >
   </div>
@@ -18,7 +18,11 @@ export default {
     title: {
       type: String,
       default: '',
-    }
+    },
+    successPageImage: {
+      type: String,
+      default: '',
+    },
   }
 }
 </script>

@@ -6,7 +6,7 @@
         width: 17px
         background-color: var(--quiz-white)
         &_active
-            background-color: var(--quiz-accent)
+            background-color: var(--quiz-button_back, --quiz-accent)
     &__track
         height: 4px
         background-color: var(--quiz-white)
@@ -21,7 +21,7 @@
         top: 50%
         left: 0
         transform-origin: left
-        background-color: var(--quiz-accent)
+        background-color: var(--quiz-button_back, --quiz-accent)
         transform: translate(var(--decorative-margin), -50%)
     &__knob
         cursor: pointer
@@ -33,5 +33,5 @@
         height: 30px
         width: 30px
         border-radius: 10px
-        background-color: var(--quiz-accent)
+        background-color: var(--quiz-button_back, --quiz-accent)
         flex-shrink: 0

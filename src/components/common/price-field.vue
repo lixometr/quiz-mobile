@@ -5,11 +5,11 @@
       'invalid': isError,
     }"
   >
-    <span class="apartment-price__field-price">
+    <span class="apartment-price__field-price text-quiz-value">
       {{ formattedChosenPrice }}
     </span>
 
-    <span class="apartment-price__field-symbol opacity-40">
+    <span class="apartment-price__field-symbol text-quiz-value opacity-40">
       ₽
     </span>
   </div>

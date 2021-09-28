@@ -23,6 +23,7 @@
       :titles="textData.pageTitles"
       :subtitles="textData.subtitles"
       :apartment-types="apartmentTypes"
+      :success-page-image="successPageImage"
       :class="{
         'quiz-body__track_hidden': !isQuizDataLoaded,
       }"
@@ -36,6 +37,8 @@
       :user-data="userData"
       :current-page="currentPage"
       :agreement-text="textData.agreementText"
+      :next-page-button-text="textData.nextPageButtonText"
+      :send-button-text="textData.sendButtonText"
 
       class="mt-4"
 
@@ -79,6 +82,10 @@ export default {
     currentPage: {
       type: Number,
       default: 0,
+    },
+    successPageImage: {
+      type: String,
+      default: '',
     },
     errors: {
       type: Object,
