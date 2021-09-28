@@ -20,6 +20,8 @@
 
         :apartment-types="apartmentTypes"
         :is-error="errors.apartmentTypeError"
+
+        class="mb-4"
       />
     </quiz-page>
 
