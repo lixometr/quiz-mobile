@@ -26,13 +26,17 @@
 
         class="quiz-footer__navigator quiz-footer__navigator_prev mr-2 rounded-md"
         :disabled="currentPage === 0"
-      ></button>
+      >
+        <span class="quiz-footer__navigator-arrow"></span>
+      </button>
 
       <button
         @click="setCurrentPage(currentPage + 1)"
 
         class="quiz-footer__navigator quiz-footer__navigator_next flex-grow rounded-md text-quiz-white text-left pl-8 font-medium text-lg"
       >
+        <span class="quiz-footer__navigator-arrow"></span>
+
         {{ nextPageButtonText }}
       </button>
     </div>

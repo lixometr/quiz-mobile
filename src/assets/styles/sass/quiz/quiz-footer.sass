@@ -35,19 +35,40 @@
     &__navigator
         height: 65px
         transition: all .3s ease-in-out 0s
-        color: var(--quiz-button_text, --quiz-white)
+        color: var(--quiz-button_text)
         background-color: var(--quiz-button_back, --quiz-accent)
-        background-image: url(../../img/button-arrow.svg)
-        background-repeat: no-repeat
-        background-position-y: center
+        position: relative
+        &-arrow
+            position: absolute
+            display: block
+            top: 50%
+            left: 50%
+            transform: translate(-50%, -50%)
+            width: 8px
+            height: 21px
+            &::after, &::before
+                content: ''
+                display: block
+                position: absolute
+                top: 50%
+                left: 50%
+                height: 15px
+                width: 5px
+                background-color: var(--quiz-button_text)
+            &::before
+                transform: translate(-50%, calc(5.5px - 50%)) rotate(30deg)
+            &::after
+                transform: translate(-50%, calc(-5.5px - 50%)) rotate(150deg)
         &:not([disabled]):hover
             box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.25)
         &_prev
-            background-position-x: center
             transform: rotate(180deg)
             flex-basis: 65px
         &_next
             background-position-x: calc( 100% - 10px )
+            .quiz-footer__navigator-arrow
+                left: auto
+                right: 14px
         &_submit
             background-image: none
         &[disabled]

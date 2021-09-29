@@ -66,7 +66,7 @@
         active: currentPage === successPageIndex,
       }"
 
-      title-class="md:mt-16 mb-3 sm:mb-5 text-4xl"
+      title-class="md:mt-16 mb-3 sm:mb-5 text-32px"
     >
       <success-page
         :title="successPage.text"
