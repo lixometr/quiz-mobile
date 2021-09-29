@@ -1,6 +1,7 @@
 <template>
   <main
     class="quiz-body__track flex flex-grow"
+    ref="quizTrack"
     :style="{
       transform: `translateX(-${quizTrackTranslate}px)`,
     }"
@@ -8,7 +9,6 @@
     <quiz-page
       :title="page.title"
       class="quiz-body__page"
-      ref="quizPage"
       :class="{
         active: currentPage === index,
       }"
@@ -45,7 +45,6 @@
     <quiz-page
       :title="phonePage.title"
       class="quiz-body__page"
-      ref="quizPage"
       :class="{
         active: currentPage === phonePageIndex,
       }"
@@ -63,7 +62,6 @@
     <quiz-page
       :title="successPage.title"
       class="quiz-body__page"
-      ref="quizPage"
       :class="{
         active: currentPage === successPageIndex,
       }"
@@ -149,13 +147,12 @@ export default {
     }
   },
   mounted(){
-    this.quizPageWidth = this.$refs.quizPage.$el.getBoundingClientRect().width;
-
-    window.addEventListener('resize', this.updatePageWidth.bind(this));
+    window.addEventListener('resize', this.updatePageWidth);
+    this.updatePageWidth();
   },
   methods: {
     updatePageWidth(){
-      this.quizPageWidth = this.$refs.quizPage.$el.getBoundingClientRect().width;
+      this.quizPageWidth = this.$refs.quizTrack.getBoundingClientRect().width;
     },
 
     updateChosenApartments(apartments, pageIndex){

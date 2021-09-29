@@ -19,7 +19,7 @@
     <div
       class="flex"
 
-      v-if="currentPage < 2"
+      v-if="currentPage < formPageIndex"
     >
       <button
         @click="setCurrentPage(currentPage - 1)"
@@ -37,7 +37,7 @@
       </button>
     </div>
 
-    <template v-else-if="currentPage === 2">
+    <template v-else-if="currentPage === formPageIndex">
       <button
         @click="sendUserData()"
 
@@ -56,6 +56,7 @@
 </template>
 
 <script>
+import { pageTypes } from '../../constants.js';
 import quizPaginationItem from './quiz-pagination-item.vue';
 
 export default {
@@ -77,6 +78,12 @@ export default {
     nextPageButtonText: {
       type: String,
       default: 'Далее',
+    },
+    sliderPages: {
+      type: Array,
+      default: function(){
+        return [];
+      }
     },
     sendButtonText: {
       type: String,
@@ -109,6 +116,15 @@ export default {
       this.$emit('send-user-data');
       this.setCurrentPage(this.currentPage + 1);
     },
+  },
+  computed: {
+    formPageIndex(){
+      return this.sliderPages.findIndex(page => page.type === pageTypes.phone)
+    },
+
+    successPageIndex(){
+      return this.sliderPages.findIndex(page => page.type === pageTypes.info)
+    }
   },
   components: {
     quizPaginationItem,

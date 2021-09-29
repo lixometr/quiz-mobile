@@ -37,6 +37,7 @@
 
       :user-data="userData"
       :current-page="currentPage"
+      :slider-pages="sliderPages"
       :pagination-items="paginationItems"
       :agreement-text="textData.agreementText"
       :send-button-text="textData.sendButtonText"
