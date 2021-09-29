@@ -13,7 +13,7 @@
       v-for="(type, index) in cApartmentTypes"
       :key="index"
     >
-      {{ type.title }}
+      {{ type.type }}
     </custom-checkbox>
   </div>
 </template>

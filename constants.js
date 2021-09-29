@@ -1,6 +1,5 @@
 export const EmptyUserObject = {
-  apartmentTypes: [],
-  price: 0,
+  answers: {},
   phone: '',
 }
 
@@ -15,6 +14,13 @@ export const pagesId = {
   price: 'price',
   phone: 'phone',
   final: 'final',
+}
+
+export const pageTypes = {
+  listBox: 'listBox',
+  range: 'range',
+  phone: 'phone',
+  info: 'info',
 }
 
 export const pagesMap = {

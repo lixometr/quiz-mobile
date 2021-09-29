@@ -5,8 +5,8 @@
         width: 30px
         height: 30px
         flex-shrink: 0
-        border: 2px solid var(--quiz-white)
-        background-color: var(--quiz-white)
+        border: 2px solid var(--quiz-input1, --quiz-white)
+        background-color: var(--quiz-input1, --quiz-white)
         position: relative
         transition: border-color .2s ease-in
         &::after, &::before
@@ -16,13 +16,15 @@
             top: 50%
             left: 50%
             height: 5px
-            background-color: var(--quiz-button_back, --quiz-accent)
+            background-color: var(--quiz-input2, --quiz-accent)
         &::after
             width: 12px
             transform: translate(-83%, -16%) rotate(45deg)
         &::before
             width: 17px
             transform: translate(-37%, -50%) rotate(-45deg)
+    &__text
+        line-height: 1.3em
     &__input:checked + &__fake
         &::after, &::before
             display: block

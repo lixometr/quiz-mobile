@@ -9,7 +9,7 @@
     }"
   >
     <div
-      class="text-sm text-quiz-white text-center absolute font-bold"
+      class="text-sm text-center absolute font-bold whitespace-nowrap"
       :class="labelClass"
     >
       {{ `${index + 1} из ${totalPages}` }}

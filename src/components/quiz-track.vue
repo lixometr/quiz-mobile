@@ -6,48 +6,48 @@
     }"
   >
     <quiz-page
-      :title="titles[0]"
+      :title="page.title"
       class="quiz-body__page"
       ref="quizPage"
       :class="{
-        active: currentPage === 0,
+        active: currentPage === index,
       }"
 
       title-class="mb-6 sm:mb-16"
+
+      v-for="(page, index) in dynamicPages"
+      :key="index"
     >
       <apartment-type-page
-        @chosen-apartments-change="updateChosenApartments($event)"
+        @chosen-apartments-change="updateChosenApartments($event, index)"
 
-        :apartment-types="apartmentTypes"
-        :is-error="errors.apartmentTypeError"
+        :apartment-types="page.values"
+        :is-error="errors[page.id]"
         :max-question-length="maxQuestionLength"
 
         class="mb-4"
+
+        v-if="page.type === pageTypes.listBox"
       />
-    </quiz-page>
 
-    <quiz-page
-      :title="titles[1]"
-      class="quiz-body__page"
-      :class="{
-        active: currentPage === 1,
-      }"
-
-      title-class="mb-6 sm:mb-16"
-    >
       <apartment-price-page
-        @apartment-price-change="updateApartmentPrice($event)"
+        @update-range-pages="updateRangePages($event, index)"
 
-        :slider-data="sliderData"
-        :is-error="errors.priceError"
+        :slider-data="{
+          ...page.values,
+        }"
+        :is-error="errors[page.id]"
+
+        v-else-if="page.type === pageTypes.range"
       />
     </quiz-page>
 
     <quiz-page
-      :title="titles[2]"
+      :title="phonePage.title"
       class="quiz-body__page"
+      ref="quizPage"
       :class="{
-        active: currentPage === 2,
+        active: currentPage === phonePageIndex,
       }"
 
       title-class="mb-6 sm:mb-16"
@@ -55,22 +55,23 @@
       <form-page
         @user-phone-change="updateUserPhone($event)"
 
-        :title="subtitles[0]"
+        :title="phonePage.text"
         :is-error="errors.phoneError"
       />
     </quiz-page>
 
     <quiz-page
-      :title="titles[3]"
+      :title="successPage.title"
       class="quiz-body__page"
+      ref="quizPage"
       :class="{
-        active: currentPage === 3,
+        active: currentPage === successPageIndex,
       }"
 
       title-class="md:mt-16 mb-3 sm:mb-5 text-4xl"
     >
       <success-page
-        :title="subtitles[1]"
+        :title="successPage.text"
         :success-page-image="successPageImage"
       />
     </quiz-page>
@@ -83,7 +84,7 @@ import formPage from './pages/form-page.vue';
 import successPage from './pages/success-page.vue';
 import apartmentTypePage from './pages/apartment-type-page.vue';
 import apartmentPricePage from './pages/apartment-price-page.vue';
-import { EmptyErrorsObject } from '../../constants.js';
+import { pageTypes } from '../../constants.js';
 
 export default {
   props: {
@@ -111,10 +112,21 @@ export default {
       type: Number,
       default: 0,
     },
+    sliderPages: {
+      type: Array,
+      default: function(){
+        return [{
+          id: '',
+          text: '',
+          title: '',
+          type: pageTypes.listBox,
+        }];
+      }
+    },
     errors: {
       type: Object,
       default: function(){
-        return { ...EmptyErrorsObject };
+        return {};
       },
     },
     titles: {
@@ -133,6 +145,7 @@ export default {
   data(){
     return {
       quizPageWidth: 0,
+      pageTypes: {...pageTypes},
     }
   },
   mounted(){
@@ -145,12 +158,18 @@ export default {
       this.quizPageWidth = this.$refs.quizPage.$el.getBoundingClientRect().width;
     },
 
-    updateChosenApartments(apartments){
-      this.$emit('chosen-apartments-change', apartments)
+    updateChosenApartments(apartments, pageIndex){
+      this.$emit('chosen-apartments-change', {
+        pageIndex,
+        apartments,
+      });
     },
 
-    updateApartmentPrice(price){
-      this.$emit('apartment-price-change', price);
+    updateRangePages(rangeValue, pageIndex){
+      this.$emit('update-range-pages', {
+        pageIndex,
+        rangeValue,
+      });
     },
 
     updateUserPhone(phone){
@@ -160,7 +179,35 @@ export default {
   computed: {
     quizTrackTranslate(){
       return this.quizPageWidth * this.currentPage;
-    }
+    },
+
+    dynamicPages(){
+      return this.sliderPages.filter(page => page.type !== pageTypes.phone && page.type !== pageTypes.info);
+    },
+
+    phonePage(){
+      return this.sliderPages.find(page => page.type === pageTypes.phone);
+    },
+
+    successPage(){
+      return this.sliderPages.find(page => page.type === pageTypes.info);
+    },
+
+    phonePageTitle(){
+      return this.phonePage?.title || '';
+    },
+
+    successPageTitle(){
+      return this.successPage?.title || '';
+    },
+
+    phonePageIndex(){
+      return this.sliderPages.findIndex(page => page.type === pageTypes.phone);
+    },
+
+    successPageIndex(){
+      return this.sliderPages.findIndex(page => page.type === pageTypes.info);
+    },
   },
   components: {
     quizPage,

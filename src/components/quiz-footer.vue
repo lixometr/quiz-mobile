@@ -7,11 +7,11 @@
         :index="index"
         :is-visited="page.isVisited"
         :current-page="currentPage"
-        :total-pages="pages.length"
+        :total-pages="paginationItems.length"
         label-class="quiz-footer__paginatioon-label"
         class="quiz-footer__pagination-item"
 
-        v-for="(page, index) in pages"
+        v-for="(page, index) in paginationItems"
         :key="index"
       />
     </ul>
@@ -68,12 +68,6 @@ export default {
       type: String,
       default: '',
     },
-    pages: {
-      type: Array,
-      default: function(){
-        return [];
-      },
-    },
     userData: {
       type: Object,
       default: function(){
@@ -88,10 +82,21 @@ export default {
       type: String,
       default: 'Отправить',
     },
+    paginationItems: {
+      type: Array,
+      default: function(){
+        return [];
+      }
+    },
+  },
+  data(){
+    return {
+      pages: [],
+    }
   },
   methods: {
     paginationClickHandler(index){
-      if(this.pages[index].isVisited){
+      if(this.paginationItems[index].isVisited){
         this.setCurrentPage(index);
       }
     },

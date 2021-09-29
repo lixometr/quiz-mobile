@@ -9,7 +9,7 @@
       {{ formattedChosenPrice }}
     </span>
 
-    <span class="apartment-price__field-symbol text-quiz-value opacity-40">
+    <span class="apartment-price__field-symbol text-quiz-value">
       ₽
     </span>
   </div>

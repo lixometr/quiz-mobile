@@ -14,11 +14,12 @@
 
     <quiz-track
       @user-phone-change="updateUserPhone($event)"
-      @apartment-price-change="updateApartmentPrice($event)"
+      @update-range-pages="updateRangePages($event)"
       @chosen-apartments-change="updateChosenApartments($event)"
 
       :errors="errors"
       :slider-data="sliderData"
+      :slider-pages="sliderPages"
       :current-page="currentPage"
       :titles="textData.pageTitles"
       :subtitles="textData.subtitles"
@@ -34,16 +35,16 @@
       @set-current-page="setCurrentPage($event)"
       @send-user-data="sendUserData()"
 
-      :pages="pagesArr"
       :user-data="userData"
       :current-page="currentPage"
+      :pagination-items="paginationItems"
       :agreement-text="textData.agreementText"
       :send-button-text="textData.sendButtonText"
       :next-page-button-text="textData.nextPageButtonText"
 
       class="mt-4"
 
-      v-if="currentPage !== pagesArr.length - 1"
+      v-if="currentPage !== paginationItems.length - 1"
     />
   </div>
 </template>
@@ -92,6 +93,12 @@ export default {
       type: String,
       default: '',
     },
+    sliderPages: {
+      type: Array,
+      default: function(){
+        return [];
+      }
+    },
     errors: {
       type: Object,
       default: function(){
@@ -106,20 +113,7 @@ export default {
   data(){
     return {
       cCurrentPage: this.currentPage,
-      pagesArr: [
-        {
-          isVisited: true,
-        },
-        {
-          isVisited: false,
-        },
-        {
-          isVisited: false,
-        },
-        {
-          isVisited: false,
-        },
-      ],
+      paginationItems: [],
     }
   },
   methods: {
@@ -132,12 +126,12 @@ export default {
       this.$emit('send-user-data');
     },
 
-    updateChosenApartments(apartments){
-      this.$emit('chosen-apartments-change', apartments)
+    updateChosenApartments(apartmentsData){
+      this.$emit('chosen-apartments-change', apartmentsData)
     },
 
-    updateApartmentPrice(price){
-      this.$emit('apartment-price-change', price);
+    updateRangePages(price){
+      this.$emit('update-range-pages', price);
     },
 
     updateUserPhone(phone){
@@ -146,10 +140,18 @@ export default {
   },
   watch: {
     currentPage(newPage){
-      this.pagesArr.forEach((page, index) => {
+      this.paginationItems.forEach((page, index) => {
         page.isVisited = index <= newPage;
       });
-    }
+    },
+
+    sliderPages(newPages){
+      this.paginationItems = [...newPages].map((p, idx) => {
+        return {
+          isVisited: idx === 0,
+        }
+      });
+    },
   },
   components: {
     quizTrack,

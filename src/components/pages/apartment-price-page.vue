@@ -42,7 +42,7 @@ export default {
     updateChosenPrice(price){
       this.chosenPrice = price;
 
-      this.$emit('apartment-price-change', price);
+      this.$emit('update-range-pages', price);
     },
   },
   watch: {

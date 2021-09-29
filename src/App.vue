@@ -11,17 +11,16 @@
     <quiz-body
       @toggle-quiz="toggleQuiz()"
       @send-user-data="sendUserData()"
-      @update:current-page="updateCurrentPage($event)"
       @user-phone-change="updateUserPhone($event)"
-      @apartment-price-change="updateApartmentPrice($event)"
-      @chosen-apartments-change="updateChosenApartments($event)"
+      @update-range-pages="updateRangePages($event)"
+      @update:current-page="updateCurrentPage($event)"
+      @chosen-apartments-change="updateListBoxPages($event)"
 
       :success-page-image="fetchedQuizData.successPageImage"
-      :apartment-types="fetchedQuizData.apartmentTypes"
-      :slider-data="fetchedQuizData.rangeSlider"
       :max-question-length="maxQuestionLength"
       :is-quiz-data-loaded="isQuizDataLoaded"
       :text-data="fetchedQuizData.text"
+      :slider-pages="sliderPages"
       :current-page="currentPage"
       :user-data="userData"
       :errors="errors"
@@ -43,7 +42,7 @@
 <script>
 import quizTrigger from './components/quiz-trigger.vue';
 import quizBody from './components/quiz-body.vue';
-import { EmptyUserObject, EmptyErrorsObject, MAX_PHONE_CHARACTERS, pagesMap, apiPaths, pagesId } from '../constants.js';
+import { EmptyUserObject, EmptyErrorsObject, MAX_PHONE_CHARACTERS, apiPaths, pageTypes, pagesId } from '../constants.js';
 
 export default {
   name: 'App',
@@ -54,6 +53,20 @@ export default {
       currentPage: 0,
       maxQuestionLength: 0,
       fetchedQuizData: {},
+      sliderPages: [
+        {
+          id: '',
+          text: '',
+          title: '',
+          type: pageTypes.phone,
+        },
+        {
+          id: '',
+          text: '',
+          title: '',
+          type: pageTypes.info,
+        },
+      ],
       targetsData: {},
       colorsData: {},
       quizTriggerData: {
@@ -74,11 +87,10 @@ export default {
     const quizData = await this.fetchQuizData();
 
     const {
-      subtitles,
-      pageTitles,
       colorsData,
       triggerData,
       targetsData,
+      sliderPages,
       rangeSlider,
       agreementText,
       sendButtonText,
@@ -102,6 +114,10 @@ export default {
       ...colorsData,
     }
 
+    this.sliderPages = [
+      ...sliderPages,
+    ]
+
     this.fetchedQuizData = {
       apartmentTypes,
       successPageImage,
@@ -112,50 +128,65 @@ export default {
         value: rangeSlider.default,
       },
       text: {
-        pageTitles,
-        subtitles,
         agreementText,
         nextPageButtonText,
         sendButtonText,
       }
     };
 
-    this.userData.price = rangeSlider.default;
-
     this.isQuizDataLoaded = true;
   },
   methods: {
     mapQuizData(quizData){
-      const triggerData = quizData.button;
       const colorsData = quizData.colors;
+      const triggerData = quizData.button;
       const targetsData = quizData.targets;
       const nextPageButtonText = quizData.screens.button;
       const maxQuestionLength = quizData.screens.questions;
 
-      const pageTitles =
-        quizData.screens.items
-          .map(page => page.title);
-
-      const subtitles =
-        quizData.screens.items
-          .map(page => page.text)
-          .filter(t => !!t);
-
       const agreementText =
         quizData.screens.items
-          .find(screen => screen.id === pagesId.phone).text_bottom;
+          .find(screen => screen.type === pageTypes.phone).text_bottom;
 
       const sendButtonText =
         quizData.screens.items
-          .find(screen => screen.id === pagesId.phone).button;
+          .find(screen => screen.type === pageTypes.phone).button;
 
       const successPageImage =
         quizData.screens.items
-          .find(screen => screen.id === pagesId.final).image;
+          .find(screen => screen.type === pageTypes.info).image;
 
       const rangeSlider =
         quizData.screens.items
           .find(screen => screen.id === pagesId.price).values;
+
+      const sliderPages = quizData.screens.items
+        .map(page => {
+          if(page.type === pageTypes.listBox){
+            return {
+              ...page,
+              values: page.values.map(type => {
+                return {
+                  type,
+                  isChecked: false,
+                }
+              })
+            }
+          }
+
+          else if(page.type === pageTypes.range){
+            return {
+              ...page,
+              values: {
+                minValue: page.values.min,
+                maxValue: page.values.max,
+                value: page.values.default,
+              }
+            }
+          }
+
+          return page;
+        });
 
       const apartmentTypes =
         quizData.screens.items
@@ -168,10 +199,9 @@ export default {
             });
 
       return {
-        subtitles,
-        pageTitles,
         colorsData,
         rangeSlider,
+        sliderPages,
         triggerData,
         targetsData,
         agreementText,
@@ -183,22 +213,6 @@ export default {
       }
     },
 
-    mapUserData(userData){
-      const answers = {}
-
-      answers[pagesId.rooms] = userData.apartmentTypes
-        .map(type => this.fetchedQuizData.apartmentTypes[type].title);
-
-      answers[pagesId.price] = `${userData.price}`;
-
-      const mappedUserData = {
-        answers,
-        phone: this.userData.phone,
-      }
-
-      return mappedUserData;
-    },
-
     toggleQuiz(){
       this.isQuizOpened = !this.isQuizOpened;
 
@@ -206,11 +220,13 @@ export default {
         this.currentPage = 0;
 
         this.userData = {
-          ...EmptyUserObject,
+          answers: {},
+          phone: '',
         };
 
-        this.fetchedQuizData.apartmentTypes
-          .forEach(type => type.isChecked = false);
+        this.sliderPages
+          .filter(page => page.type === pageTypes.listBox)
+          .forEach(page => page.values.forEach(type => type.isChecked = false));
       }
     },
 
@@ -220,23 +236,32 @@ export default {
       }
     },
 
+    constrain(val, min, max){
+      return val > max ? max : val < min ? min : val;
+    },
+
     validateUserData(userData, currentPage, validateAll = false){
       let validateState = true;
+      currentPage = this.constrain(currentPage, 0, this.sliderPages.length - 1);
 
-      if(currentPage === pagesMap.apartmentTypePage || validateAll){
-        this.errors.apartmentTypeError = !userData.apartmentTypes.length;
+      const pageType = this.sliderPages[currentPage]?.type;
+      const pageId = this.sliderPages[currentPage]?.id;
 
-        validateState = validateState && !this.errors.apartmentTypeError;
+
+      if(pageType === pageTypes.listBox || validateAll){
+        this.$set(this.errors, pageId, !userData?.answers[pageId]?.length);
+
+        validateState = validateState && !this.errors[pageId];
       }
 
-      if(currentPage === pagesMap.apartmentPricePage || validateAll){
-        this.errors.priceError = !userData.price;
+      if(pageType === pageTypes.range || validateAll){
+        this.$set(this.errors, pageId, !userData?.answers[pageId]);
 
-        validateState = validateState && !this.errors.priceError;
+        validateState = validateState && !this.errors[pageId];
       }
 
-      if(currentPage === pagesMap.formPage || validateAll){
-        this.errors.phoneError = userData.phone.length !== MAX_PHONE_CHARACTERS;
+      if(pageType === pageTypes.phone || validateAll){
+        this.errors.phoneError = userData.phone?.length !== MAX_PHONE_CHARACTERS;
 
         validateState = validateState && !this.errors.phoneError;
       }
@@ -255,10 +280,10 @@ export default {
     async sendUserData(){
       if(this.validateUserData(this.userData, -1, true)){
         const formData = new FormData();
-        const {userPhone, answers} = this.mapUserData(this.userData);
+        const { phone, answers } = this.userData;
 
-        formData.set('phone', userPhone);
-        formData.set('answers', answers);
+        formData.set('phone', phone);
+        formData.set('answers', JSON.stringify(answers));
 
         await fetch(apiPaths.postPath, {
           method: 'POST',
@@ -267,7 +292,6 @@ export default {
           },
           body: formData,
         })
-        .then(res => console.log(res))
         .catch(err => console.log(err));
 
         await this.sendMetrics();
@@ -299,12 +323,27 @@ export default {
       }
     },
 
-    updateChosenApartments(apartments){
-      this.userData.apartmentTypes = [...apartments];
+    updateListBoxPages(apartmentsData){
+      const {pageIndex, apartments} = apartmentsData;
+      const currPage = this.sliderPages[pageIndex];
+
+      currPage.values
+        .forEach((type, index) => {
+          type.isChecked = apartments.includes(index);
+        });
+
+      this.userData.answers[currPage.id] = currPage.values
+        .filter(item => item.isChecked)
+        .map(item => item.type);
     },
 
-    updateApartmentPrice(price){
-      this.userData.price = price;
+    updateRangePages(rangeData){
+      const { pageIndex, rangeValue } = rangeData;
+      const currPage = this.sliderPages[pageIndex];
+
+      currPage.values.value = rangeValue;
+
+      this.userData.answers[currPage.id] = rangeValue;
     },
 
     updateUserPhone(phone){

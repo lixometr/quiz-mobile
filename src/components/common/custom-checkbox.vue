@@ -17,7 +17,7 @@
       }"
     ></div>
 
-    <span class="quiz-checkbox__text font-bold text-quiz-black text-lg">
+    <span class="quiz-checkbox__text font-bold text-quiz-value text-lg">
       <slot></slot>
     </span>
   </label>

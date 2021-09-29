@@ -2,7 +2,9 @@
 
 .apartment-price
     &__field
-        background-color: var(--quiz-white)
-        border: 2px solid var(--quiz-white)
+        background-color: var(--quiz-input1, --quiz-white)
+        border: 2px solid var(--quiz-input1, --quiz-white)
         transition: border-color .2s ease-in
         user-select: none
+        &-symbol
+            color: var(--quiz-placeholder, --quiz-black)
