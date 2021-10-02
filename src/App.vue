@@ -42,7 +42,7 @@
 <script>
 import quizTrigger from './components/quiz-trigger.vue';
 import quizBody from './components/quiz-body.vue';
-import { EmptyUserObject, EmptyErrorsObject, MAX_PHONE_CHARACTERS, apiPaths, pageTypes, pagesId } from '../constants.js';
+import { EmptyUserObject, EmptyErrorsObject, MAX_PHONE_CHARACTERS, apiPaths, pageTypes, pagesId, QuizId } from '../constants.js';
 
 export default {
   name: 'App',
@@ -270,8 +270,16 @@ export default {
     },
 
     async fetchQuizData(){
+      const quizEl = document.querySelector(QuizId)
+      const id = quizEl.getAttribute('data-id')
+      const params = quizEl.getAttribute('data-params')
+      const initialData = {
+        id,
+        params
+      }
       return await fetch(apiPaths.getPath, {
         method: 'POST',
+        body: initialData
       })
         .then(res => res.json())
         .catch(err => console.log(err.response));

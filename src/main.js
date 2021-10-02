@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { QuizId } from '../constants'
 import App from './App.vue'
 
 import './assets/styles/css/tailwind.css'
@@ -10,4 +11,4 @@ const app = new Vue({
   render: h => h(App),
 });
 
-app.$mount('#apartment-quiz');
+app.$mount(QuizId);

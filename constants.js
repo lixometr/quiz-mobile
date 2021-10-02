@@ -1,3 +1,4 @@
+export const QuizId = '#apartment-quiz'
 export const EmptyUserObject = {
   answers: {},
   phone: '',
