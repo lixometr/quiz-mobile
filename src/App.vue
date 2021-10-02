@@ -1,10 +1,9 @@
 <template>
-  <aside
+  <div
     id="apartment-quiz"
     class="apartment-quiz flex flex-col justify-end items-end z-30 fixed"
-
     :class="{
-      active: isQuizOpened,
+      active: isQuizOpened
     }"
     :style="cssVars"
   >
@@ -15,7 +14,6 @@
       @update-range-pages="updateRangePages($event)"
       @update:current-page="updateCurrentPage($event)"
       @chosen-apartments-change="updateListBoxPages($event)"
-
       :success-page-image="fetchedQuizData.successPageImage"
       :max-question-length="maxQuestionLength"
       :is-quiz-data-loaded="isQuizDataLoaded"
@@ -24,29 +22,34 @@
       :current-page="currentPage"
       :user-data="userData"
       :errors="errors"
-
       class="apartment-quiz__body z-10 absolute bottom-0"
     />
 
     <quiz-trigger
       @toggle-quiz="toggleQuiz()"
-
       :trigger-text="quizTriggerData.text"
       :trigger-icon="quizTriggerData.icon"
-
       class="apartment-quiz__trigger"
     />
-  </aside>
+  </div>
 </template>
 
 <script>
-import quizTrigger from './components/quiz-trigger.vue';
-import quizBody from './components/quiz-body.vue';
-import { EmptyUserObject, EmptyErrorsObject, MAX_PHONE_CHARACTERS, apiPaths, pageTypes, pagesId, QuizId } from '../constants.js';
+import quizTrigger from "./components/quiz-trigger.vue";
+import quizBody from "./components/quiz-body.vue";
+import {
+  EmptyUserObject,
+  EmptyErrorsObject,
+  MAX_PHONE_CHARACTERS,
+  apiPaths,
+  pageTypes,
+  pagesId,
+  QuizId
+} from "../constants.js";
 
 export default {
-  name: 'App',
-  data(){
+  name: "App",
+  data() {
     return {
       isQuizOpened: false,
       isQuizDataLoaded: false,
@@ -55,33 +58,33 @@ export default {
       fetchedQuizData: {},
       sliderPages: [
         {
-          id: '',
-          text: '',
-          title: '',
-          type: pageTypes.phone,
+          id: "",
+          text: "",
+          title: "",
+          type: pageTypes.phone
         },
         {
-          id: '',
-          text: '',
-          title: '',
-          type: pageTypes.info,
-        },
+          id: "",
+          text: "",
+          title: "",
+          type: pageTypes.info
+        }
       ],
       targetsData: {},
       colorsData: {},
       quizTriggerData: {
-        icon: '',
-        text: '',
+        icon: "",
+        text: ""
       },
       userData: {
-        ...EmptyUserObject,
+        ...EmptyUserObject
       },
       errors: {
-        ...EmptyErrorsObject,
-      },
-    }
+        ...EmptyErrorsObject
+      }
+    };
   },
-  async mounted(){
+  async mounted() {
     this.isQuizDataLoaded = false;
 
     const quizData = await this.fetchQuizData();
@@ -97,26 +100,24 @@ export default {
       apartmentTypes,
       successPageImage,
       maxQuestionLength,
-      nextPageButtonText,
+      nextPageButtonText
     } = this.mapQuizData(quizData);
 
     this.maxQuestionLength = maxQuestionLength;
 
     this.quizTriggerData = {
-      ...triggerData,
-    }
+      ...triggerData
+    };
 
     this.targetsData = {
-      ...targetsData,
-    }
+      ...targetsData
+    };
 
     this.colorsData = {
-      ...colorsData,
-    }
+      ...colorsData
+    };
 
-    this.sliderPages = [
-      ...sliderPages,
-    ]
+    this.sliderPages = [...sliderPages];
 
     this.fetchedQuizData = {
       apartmentTypes,
@@ -125,78 +126,74 @@ export default {
         minValue: rangeSlider.min,
         maxValue: rangeSlider.max,
 
-        value: rangeSlider.default,
+        value: rangeSlider.default
       },
       text: {
         agreementText,
         nextPageButtonText,
-        sendButtonText,
+        sendButtonText
       }
     };
 
     this.isQuizDataLoaded = true;
   },
   methods: {
-    mapQuizData(quizData){
+    mapQuizData(quizData) {
       const colorsData = quizData.colors;
       const triggerData = quizData.button;
       const targetsData = quizData.targets;
       const nextPageButtonText = quizData.screens.button;
       const maxQuestionLength = quizData.screens.questions;
 
-      const agreementText =
-        quizData.screens.items
-          .find(screen => screen.type === pageTypes.phone).text_bottom;
+      const agreementText = quizData.screens.items.find(
+        screen => screen.type === pageTypes.phone
+      ).text_bottom;
 
-      const sendButtonText =
-        quizData.screens.items
-          .find(screen => screen.type === pageTypes.phone).button;
+      const sendButtonText = quizData.screens.items.find(
+        screen => screen.type === pageTypes.phone
+      ).button;
 
-      const successPageImage =
-        quizData.screens.items
-          .find(screen => screen.type === pageTypes.info).image;
+      const successPageImage = quizData.screens.items.find(
+        screen => screen.type === pageTypes.info
+      ).image;
 
-      const rangeSlider =
-        quizData.screens.items
-          .find(screen => screen.id === pagesId.price).values;
+      const rangeSlider = quizData.screens.items.find(
+        screen => screen.id === pagesId.price
+      ).values;
 
-      const sliderPages = quizData.screens.items
-        .map(page => {
-          if(page.type === pageTypes.listBox){
-            return {
-              ...page,
-              values: page.values.map(type => {
-                return {
-                  type,
-                  isChecked: false,
-                }
-              })
-            }
-          }
-
-          else if(page.type === pageTypes.range){
-            return {
-              ...page,
-              values: {
-                minValue: page.values.min,
-                maxValue: page.values.max,
-                value: page.values.default,
-              }
-            }
-          }
-
-          return page;
-        });
-
-      const apartmentTypes =
-        quizData.screens.items
-          .find(screen => screen.id === pagesId.rooms).values
-            .map(type => {
+      const sliderPages = quizData.screens.items.map(page => {
+        if (page.type === pageTypes.listBox) {
+          return {
+            ...page,
+            values: page.values.map(type => {
               return {
-                title: type,
-                isChecked: false,
-              }
-            });
+                type,
+                isChecked: false
+              };
+            })
+          };
+        } else if (page.type === pageTypes.range) {
+          return {
+            ...page,
+            values: {
+              minValue: page.values.min,
+              maxValue: page.values.max,
+              value: page.values.default
+            }
+          };
+        }
+
+        return page;
+      });
+
+      const apartmentTypes = quizData.screens.items
+        .find(screen => screen.id === pagesId.rooms)
+        .values.map(type => {
+          return {
+            title: type,
+            isChecked: false
+          };
+        });
 
       return {
         colorsData,
@@ -209,59 +206,61 @@ export default {
         apartmentTypes,
         successPageImage,
         maxQuestionLength,
-        nextPageButtonText,
-      }
+        nextPageButtonText
+      };
     },
 
-    toggleQuiz(){
+    toggleQuiz() {
       this.isQuizOpened = !this.isQuizOpened;
 
-      if(!this.isQuizOpened){
+      if (!this.isQuizOpened) {
         this.currentPage = 0;
 
         this.userData = {
           answers: {},
-          phone: '',
+          phone: ""
         };
 
         this.sliderPages
           .filter(page => page.type === pageTypes.listBox)
-          .forEach(page => page.values.forEach(type => type.isChecked = false));
+          .forEach(page =>
+            page.values.forEach(type => (type.isChecked = false))
+          );
       }
     },
 
-    updateCurrentPage(page){
-      if(this.validateUserData(this.userData, page - 1)){
+    updateCurrentPage(page) {
+      if (this.validateUserData(this.userData, page - 1)) {
         this.currentPage = page;
       }
     },
 
-    constrain(val, min, max){
+    constrain(val, min, max) {
       return val > max ? max : val < min ? min : val;
     },
 
-    validateUserData(userData, currentPage, validateAll = false){
+    validateUserData(userData, currentPage, validateAll = false) {
       let validateState = true;
       currentPage = this.constrain(currentPage, 0, this.sliderPages.length - 1);
 
       const pageType = this.sliderPages[currentPage]?.type;
       const pageId = this.sliderPages[currentPage]?.id;
 
-
-      if(pageType === pageTypes.listBox || validateAll){
+      if (pageType === pageTypes.listBox || validateAll) {
         this.$set(this.errors, pageId, !userData?.answers[pageId]?.length);
 
         validateState = validateState && !this.errors[pageId];
       }
 
-      if(pageType === pageTypes.range || validateAll){
+      if (pageType === pageTypes.range || validateAll) {
         this.$set(this.errors, pageId, !userData?.answers[pageId]);
 
         validateState = validateState && !this.errors[pageId];
       }
 
-      if(pageType === pageTypes.phone || validateAll){
-        this.errors.phoneError = userData.phone?.length !== MAX_PHONE_CHARACTERS;
+      if (pageType === pageTypes.phone || validateAll) {
+        this.errors.phoneError =
+          userData.phone?.length !== MAX_PHONE_CHARACTERS;
 
         validateState = validateState && !this.errors.phoneError;
       }
@@ -269,83 +268,79 @@ export default {
       return validateState;
     },
 
-    async fetchQuizData(){
-      const quizEl = document.querySelector(QuizId)
-      const id = quizEl.getAttribute('data-id')
-      const params = quizEl.getAttribute('data-params')
-      const initialData = {
-        id,
-        params
+    async fetchQuizData() {
+      const quizEl = document.querySelector(QuizId);
+      const id = quizEl.getAttribute("data-id");
+      const params = quizEl.getAttribute("data-params");
+      const initialData = new FormData();
+      if (id) {
+        initialData.append("id", id);
+      }
+      if (params) {
+        initialData.append("params", params);
       }
       return await fetch(apiPaths.getPath, {
-        method: 'POST',
+        method: "POST",
         body: initialData
       })
         .then(res => res.json())
         .catch(err => console.log(err.response));
     },
 
-    async sendUserData(){
-      if(this.validateUserData(this.userData, -1, true)){
+    async sendUserData() {
+      if (this.validateUserData(this.userData, -1, true)) {
         const formData = new FormData();
         const { phone, answers } = this.userData;
 
-        formData.set('phone', phone);
-        formData.set('answers', JSON.stringify(answers));
+        formData.set("phone", phone);
+        formData.set("answers", JSON.stringify(answers));
 
         await fetch(apiPaths.postPath, {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'multipart/form-data'
+            "Content-Type": "multipart/form-data"
           },
-          body: formData,
-        })
-        .catch(err => console.log(err));
+          body: formData
+        }).catch(err => console.log(err));
 
         await this.sendMetrics();
       }
     },
 
-    async sendMetrics(){
-      if (typeof gtag === 'function'){
-
+    async sendMetrics() {
+      if (typeof gtag === "function") {
         // eslint-disable-next-line no-undef
-        gtag(
-          'event',
-          this.targetsData.google[0],
-          {
-            event_category: this.targetsData.google[1],
-            event_label: this.targetsData.google[2],
-          },
-        );
+        gtag("event", this.targetsData.google[0], {
+          event_category: this.targetsData.google[1],
+          event_label: this.targetsData.google[2]
+        });
       }
 
-      if (typeof ym === 'function' && this.targetsData.yandex.yMetrikaId){
+      if (typeof ym === "function" && this.targetsData.yandex.yMetrikaId) {
         // eslint-disable-next-line no-undef
         ym(
           this.targetsData.yandex.yMetrikaId,
-          'reachGoal',
+          "reachGoal",
           this.targetsData.yandex.yandexTarget,
-          {},
+          {}
         );
       }
     },
 
-    updateListBoxPages(apartmentsData){
-      const {pageIndex, apartments} = apartmentsData;
+    updateListBoxPages(apartmentsData) {
+      const { pageIndex, apartments } = apartmentsData;
       const currPage = this.sliderPages[pageIndex];
 
-      currPage.values
-        .forEach((type, index) => {
-          type.isChecked = apartments.includes(index);
-        });
+      currPage.values.forEach((type, index) => {
+        type.isChecked = apartments.includes(index);
+      });
 
       this.userData.answers[currPage.id] = currPage.values
         .filter(item => item.isChecked)
         .map(item => item.type);
     },
 
-    updateRangePages(rangeData){
+    updateRangePages(rangeData) {
       const { pageIndex, rangeValue } = rangeData;
       const currPage = this.sliderPages[pageIndex];
 
@@ -354,32 +349,31 @@ export default {
       this.userData.answers[currPage.id] = rangeValue;
     },
 
-    updateUserPhone(phone){
+    updateUserPhone(phone) {
       this.userData.phone = phone;
     },
 
-    setErrors(errors){
+    setErrors(errors) {
       this.errors = {
         ...this.errors,
-        ...errors,
-      }
-    },
+        ...errors
+      };
+    }
   },
   computed: {
-    cssVars(){
+    cssVars() {
       const stylesObj = {};
 
-      Object.keys(this.colorsData)
-      .forEach(key => {
+      Object.keys(this.colorsData).forEach(key => {
         stylesObj[`--quiz-${key}`] = this.colorsData[key];
-      })
+      });
 
       return stylesObj;
     }
   },
   components: {
     quizTrigger,
-    quizBody,
+    quizBody
   }
-}
+};
 </script>
