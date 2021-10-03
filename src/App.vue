@@ -103,7 +103,7 @@ export default {
       nextPageButtonText
     } = this.mapQuizData(quizData);
 
-    this.maxQuestionLength = maxQuestionLength;
+    this.maxQuestionLength = maxQuestionLength - 1;
 
     this.quizTriggerData = {
       ...triggerData
