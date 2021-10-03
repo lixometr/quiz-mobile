@@ -270,25 +270,25 @@ export default {
     },
 
     async sendUserData() {
-      // if (this.validateUserData(this.userData, -1, true)) {
-      const formData = new FormData();
-      const { phone, answers } = this.userData;
+      if (this.validateUserData(this.userData, -1, true)) {
+        const formData = new FormData();
+        const { phone, answers } = this.userData;
 
-      formData.set("phone", phone);
-      formData.set("answers", JSON.stringify(answers));
-      if (this.attributes.id) {
-        formData.append("id", this.attributes.id);
-      }
-      if (this.attributes.params) {
-        formData.append("params", this.attributes.params);
-      }
-      await fetch(apiPaths.postPath, {
-        method: "POST",
-        body: formData
-      }).catch(err => console.log(err));
+        formData.set("phone", phone);
+        formData.set("answers", JSON.stringify(answers));
+        if (this.attributes.id) {
+          formData.append("id", this.attributes.id);
+        }
+        if (this.attributes.params) {
+          formData.append("params", this.attributes.params);
+        }
+        await fetch(apiPaths.postPath, {
+          method: "POST",
+          body: formData
+        }).catch(err => console.log(err));
 
-      await this.sendMetrics();
-      // }
+        await this.sendMetrics();
+      }
     },
 
     async sendMetrics() {
