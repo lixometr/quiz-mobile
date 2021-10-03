@@ -276,7 +276,12 @@ export default {
 
       formData.set("phone", phone);
       formData.set("answers", JSON.stringify(answers));
-
+      if (this.attributes.id) {
+        formData.append("id", this.attributes.id);
+      }
+      if (this.attributes.params) {
+        formData.append("params", this.attributes.params);
+      }
       await fetch(apiPaths.postPath, {
         method: "POST",
         body: formData
