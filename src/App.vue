@@ -80,7 +80,17 @@ export default {
       },
       errors: {
         ...EmptyErrorsObject
-      }
+      },
+      attributes: {}
+    };
+  },
+  created() {
+    const quizEl = document.querySelector(QuizId);
+    const id = quizEl.getAttribute("data-id");
+    const params = quizEl.getAttribute("data-params");
+    this.attributes = {
+      id,
+      params
     };
   },
   async mounted() {
@@ -117,7 +127,6 @@ export default {
     this.sliderPages = [...sliderPages];
 
     this.fetchedQuizData = {
-      
       successPageImage,
       text: {
         agreementText,
@@ -148,8 +157,6 @@ export default {
         screen => screen.type === pageTypes.info
       ).image;
 
- 
-
       const sliderPages = quizData.screens.items.map(page => {
         if (page.type === pageTypes.listBox) {
           return {
@@ -174,8 +181,6 @@ export default {
 
         return page;
       });
-
- 
 
       return {
         colorsData,
@@ -249,15 +254,12 @@ export default {
     },
 
     async fetchQuizData() {
-      const quizEl = document.querySelector(QuizId);
-      const id = quizEl.getAttribute("data-id");
-      const params = quizEl.getAttribute("data-params");
       const initialData = new FormData();
-      if (id) {
-        initialData.append("id", id);
+      if (this.attributes.id) {
+        initialData.append("id", this.attributes.id);
       }
-      if (params) {
-        initialData.append("params", params);
+      if (this.attributes.params) {
+        initialData.append("params", this.attributes.params);
       }
       return await fetch(apiPaths.getPath, {
         method: "POST",
@@ -269,18 +271,18 @@ export default {
 
     async sendUserData() {
       // if (this.validateUserData(this.userData, -1, true)) {
-        const formData = new FormData();
-        const { phone, answers } = this.userData;
+      const formData = new FormData();
+      const { phone, answers } = this.userData;
 
-        formData.set("phone", phone);
-        formData.set("answers", JSON.stringify(answers));
+      formData.set("phone", phone);
+      formData.set("answers", JSON.stringify(answers));
 
-        await fetch(apiPaths.postPath, {
-          method: "POST",
-          body: formData
-        }).catch(err => console.log(err));
+      await fetch(apiPaths.postPath, {
+        method: "POST",
+        body: formData
+      }).catch(err => console.log(err));
 
-        await this.sendMetrics();
+      await this.sendMetrics();
       // }
     },
 
