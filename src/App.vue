@@ -268,7 +268,7 @@ export default {
     },
 
     async sendUserData() {
-      if (this.validateUserData(this.userData, -1, true)) {
+      // if (this.validateUserData(this.userData, -1, true)) {
         const formData = new FormData();
         const { phone, answers } = this.userData;
 
@@ -277,14 +277,11 @@ export default {
 
         await fetch(apiPaths.postPath, {
           method: "POST",
-          headers: {
-            "Content-Type": "multipart/form-data"
-          },
           body: formData
         }).catch(err => console.log(err));
 
         await this.sendMetrics();
-      }
+      // }
     },
 
     async sendMetrics() {
