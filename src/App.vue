@@ -43,7 +43,6 @@ import {
   MAX_PHONE_CHARACTERS,
   apiPaths,
   pageTypes,
-  pagesId,
   QuizId
 } from "../constants.js";
 
@@ -94,10 +93,8 @@ export default {
       triggerData,
       targetsData,
       sliderPages,
-      rangeSlider,
       agreementText,
       sendButtonText,
-      apartmentTypes,
       successPageImage,
       maxQuestionLength,
       nextPageButtonText
@@ -120,14 +117,8 @@ export default {
     this.sliderPages = [...sliderPages];
 
     this.fetchedQuizData = {
-      apartmentTypes,
+      
       successPageImage,
-      rangeSlider: {
-        minValue: rangeSlider.min,
-        maxValue: rangeSlider.max,
-
-        value: rangeSlider.default
-      },
       text: {
         agreementText,
         nextPageButtonText,
@@ -157,9 +148,7 @@ export default {
         screen => screen.type === pageTypes.info
       ).image;
 
-      const rangeSlider = quizData.screens.items.find(
-        screen => screen.id === pagesId.price
-      ).values;
+ 
 
       const sliderPages = quizData.screens.items.map(page => {
         if (page.type === pageTypes.listBox) {
@@ -186,24 +175,15 @@ export default {
         return page;
       });
 
-      const apartmentTypes = quizData.screens.items
-        .find(screen => screen.id === pagesId.rooms)
-        .values.map(type => {
-          return {
-            title: type,
-            isChecked: false
-          };
-        });
+ 
 
       return {
         colorsData,
-        rangeSlider,
         sliderPages,
         triggerData,
         targetsData,
         agreementText,
         sendButtonText,
-        apartmentTypes,
         successPageImage,
         maxQuestionLength,
         nextPageButtonText
