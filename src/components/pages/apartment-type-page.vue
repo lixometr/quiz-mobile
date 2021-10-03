@@ -48,17 +48,17 @@ export default {
     chooseApartment(index, state){
       this.cApartmentTypes[index].isChecked = state;
 
-      const chosenTypesLength = this.cApartmentTypes.filter(t => t.isChecked).length;
+      // const chosenTypesLength = this.cApartmentTypes.filter(t => t.isChecked).length;
 
-      if(chosenTypesLength > this.maxQuestionLength){
-        this.cApartmentTypes[index].isChecked = true;
+      // // if(chosenTypesLength > this.maxQuestionLength){
+      // //   this.cApartmentTypes[index].isChecked = true;
 
-        this.$nextTick(() => {
-          this.cApartmentTypes[index].isChecked = false;
-        })
+      // //   this.$nextTick(() => {
+      // //     this.cApartmentTypes[index].isChecked = false;
+      // //   })
 
-        return;
-      }
+      // //   return;
+      // // }
 
       const chosenTypes = this.cApartmentTypes
         .map((type, index) => type.isChecked ? index : null)
