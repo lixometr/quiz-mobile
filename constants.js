@@ -18,7 +18,7 @@ export const pagesId = {
 }
 
 export const pageTypes = {
-  listBox: 'listBox',
+  listBox: 'listbox',
   range: 'range',
   phone: 'phone',
   info: 'info',
