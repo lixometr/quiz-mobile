@@ -15,6 +15,7 @@
       @user-phone-change="updateUserPhone($event)"
       @update-range-pages="updateRangePages($event)"
       @chosen-apartments-change="updateChosenApartments($event)"
+      @send-user-data="sendUserData()"
       :errors="errors"
       :slider-data="sliderData"
       :slider-pages="sliderPages"

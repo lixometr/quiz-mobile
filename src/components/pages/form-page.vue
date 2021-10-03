@@ -1,6 +1,8 @@
 <template>
   <div class="quiz-form-page">
-    <h4 class="quiz-form-page__title text-base font-normal text-quiz-white mb-5">
+    <h4
+      class="quiz-form-page__title text-base font-normal text-quiz-white mb-5"
+    >
       {{ title }}
     </h4>
 
@@ -8,16 +10,15 @@
       @input="mask($event)"
       @focus="mask($event)"
       @blur="mask($event)"
-
       type="tel"
       ref="maskedInput"
       placeholder="+7"
       class="quiz-form-page__input text-quiz-value p-4 rounded-lg outline-none text-lg font-bold block"
-
+      @keypress.enter="$emit('send')"
       :class="{
-        'invalid': isError,
+        invalid: isError
       }"
-    >
+    />
   </div>
 </template>
 
@@ -26,51 +27,52 @@ export default {
   props: {
     title: {
       type: String,
-      default: '',
+      default: ""
     },
     isError: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   methods: {
     mask(event) {
       let i = 0;
-      const matrix = '+7 (___) ___ __ __';
-      const def = matrix.replace(/\D/g, '');
-      let val = event.target.value.replace(/\D/g, '');
+      const matrix = "+7 (___) ___ __ __";
+      const def = matrix.replace(/\D/g, "");
+      let val = event.target.value.replace(/\D/g, "");
 
       const setCursorPosition = (pos, elem) => {
         elem.focus();
-        if (elem.setSelectionRange){
+        if (elem.setSelectionRange) {
           elem.setSelectionRange(pos, pos);
-        }
-
-        else if (elem.createTextRange) {
+        } else if (elem.createTextRange) {
           const range = elem.createTextRange();
 
           range.collapse(true);
-          range.moveEnd('character', pos);
-          range.moveStart('character', pos);
+          range.moveEnd("character", pos);
+          range.moveStart("character", pos);
           range.select();
         }
-      }
+      };
 
       if (def.length >= val.length) val = def;
 
       event.target.value = matrix.replace(/./g, a => {
-        return /[_\d]/g.test(a) && i < val.length ? val.charAt(i++) : i >= val.length ? '' : a;
+        return /[_\d]/g.test(a) && i < val.length
+          ? val.charAt(i++)
+          : i >= val.length
+          ? ""
+          : a;
       });
 
-      if (event.type == 'blur') {
-        if (event.target.value.length == 2) event.target.value = '';
-      }
-      else{
+      if (event.type == "blur") {
+        if (event.target.value.length == 2) event.target.value = "";
+      } else {
         setCursorPosition(event.target.value.length, this.$refs.maskedInput);
       }
 
-      this.$emit('user-phone-change', event.target.value);
-    },
-  },
-}
+      this.$emit("user-phone-change", event.target.value);
+    }
+  }
+};
 </script>
